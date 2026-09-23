@@ -1,0 +1,55 @@
+/* panel.css */
+.panel { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; }
+
+.lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.75rem 1.25rem;
+  background: var(--tinta);
+  color: #d8d2cb;
+}
+
+.lateral__logo { height: 46px; width: auto; }
+
+.lateral__nav { display: flex; flex-direction: column; gap: .3rem; flex: 1; }
+
+.lateral__nav a {
+  padding: .7rem .9rem;
+  border-radius: var(--radio);
+  color: #a39c94;
+  text-decoration: none;
+  font-size: .93rem;
+  transition: all var(--transicion);
+}
+.lateral__nav a:hover { background: rgba(255, 255, 255, .06); color: #fff; }
+.lateral__nav a.activo {
+  background: linear-gradient(90deg, var(--naranja-ini), var(--naranja-fin));
+  color: #fff;
+  font-weight: 600;
+}
+
+.lateral__pie { display: flex; flex-direction: column; gap: .6rem; }
+.lateral__correo { font-size: .78rem; color: #8b847c; word-break: break-all; }
+
+.lateral__pie button {
+  padding: .6rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: var(--radio);
+  color: #d8d2cb;
+  font: inherit;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: all var(--transicion);
+}
+.lateral__pie button:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+
+.contenido { padding: 2.25rem 2.5rem; background: var(--fondo-alt); }
+
+@media (max-width: 800px) {
+  .panel { grid-template-columns: 1fr; }
+  .lateral { flex-direction: row; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .lateral__nav { flex-direction: row; flex: 1; }
+  .contenido { padding: 1.5rem 1.15rem; }
+}

@@ -1,0 +1,8 @@
+<a class="tarjeta" [routerLink]="['/tienda/producto', producto().slug]">
+  <div class="tarjeta__imagen">
+    <img [src]="producto().imagenUrl || 'assets/placeholder.svg'"
+         [alt]="producto().nombre" loading="lazy" width="400" height="533">
+  </div>
+  <h3 class="tarjeta__nombre">{{ producto().nombre }}</h3>
+  <app-precio [cop]="producto().precio" />
+</a>

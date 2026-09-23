@@ -1,0 +1,28 @@
+<p>entrar works!</p>
+<!-- entrar.html -->
+<div class="entrar">
+  <form class="tarjeta" (ngSubmit)="enviar()">
+    <img src="assets/CC-LOGO.webp" alt="Cleiner Cabadías" class="tarjeta__logo">
+    <h1>Administración</h1>
+
+    <label>
+      <span>Correo</span>
+      <input type="email" name="correo" autocomplete="username" required
+             [ngModel]="correo()" (ngModelChange)="correo.set($event)">
+    </label>
+
+    <label>
+      <span>Contraseña</span>
+      <input type="password" name="clave" autocomplete="current-password" required
+             [ngModel]="clave()" (ngModelChange)="clave.set($event)">
+    </label>
+
+    @if (error()) {
+      <p class="error" role="alert">{{ error() }}</p>
+    }
+
+    <button type="submit" [disabled]="enviando()">
+      {{ enviando() ? 'Ingresando…' : 'Ingresar' }}
+    </button>
+  </form>
+</div>

@@ -1,0 +1,20 @@
+<!-- panel.html -->
+<div class="panel">
+  <aside class="lateral">
+    <img src="assets/CC-LOGO.webp" alt="Cleiner Cabadías" class="lateral__logo">
+
+    <nav class="lateral__nav">
+      <a routerLink="/admin/productos" routerLinkActive="activo">Productos</a>
+      <a routerLink="/admin/informes" routerLinkActive="activo">Informes de ventas</a>
+    </nav>
+
+    <div class="lateral__pie">
+      <span class="lateral__correo">{{ auth.correo() }}</span>
+      <button type="button" (click)="salir()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <router-outlet />
+  </main>
+</div>

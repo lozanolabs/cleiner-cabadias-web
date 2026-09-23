@@ -1,0 +1,145 @@
+<header class="cabeza">
+  <div>
+    <a class="volver" routerLink="/admin/productos">← Productos</a>
+    <h1>{{ editando() ? 'Editar producto' : 'Nuevo producto' }}</h1>
+  </div>
+</header>
+
+@if (cargando()) {
+  <p class="vacio">Cargando…</p>
+} @else {
+  <form class="form" (ngSubmit)="guardar()">
+
+    <div class="columnas">
+
+      <!-- ═══ Columna principal ═══════════════ -->
+      <section class="bloque">
+        <h2>Contenido</h2>
+
+        <nav class="pestanas">
+          @for (i of idiomas; track i.codigo) {
+            <button type="button"
+                    [class.activa]="idiomaAbierto() === i.codigo"
+                    [class.incompleta]="!nombre()[i.codigo]"
+                    (click)="idiomaAbierto.set(i.codigo)">{{ i.nombre }}</button>
+          }
+        </nav>
+
+        @for (i of idiomas; track i.codigo) {
+          @if (idiomaAbierto() === i.codigo) {
+            <label>
+              <span>Nombre @if (i.codigo === 'es') { <em>obligatorio</em> }</span>
+              <input type="text" [name]="'nombre-' + i.codigo"
+                     [ngModel]="nombre()[i.codigo] ?? ''"
+                     (ngModelChange)="fijarTexto('nombre', i.codigo, $event)">
+            </label>
+
+            <label>
+              <span>Descripción</span>
+              <textarea rows="5" [name]="'desc-' + i.codigo"
+                        [ngModel]="descripcion()[i.codigo] ?? ''"
+                        (ngModelChange)="fijarTexto('descripcion', i.codigo, $event)"></textarea>
+            </label>
+          }
+        }
+
+        @if (faltantes().length) {
+          <p class="nota">
+            Sin traducir: {{ faltantes().join(', ') }}. Se mostrará el español en esos idiomas.
+          </p>
+        }
+      </section>
+
+      <!-- ═══ Columna lateral ═════════════════ -->
+      <aside class="bloque">
+        <h2>Publicación</h2>
+
+        <label>
+          <span>Categoría <em>obligatorio</em></span>
+          <select name="categoria" [ngModel]="categoriaId()" (ngModelChange)="categoriaId.set($event)">
+            <option value="">Selecciona…</option>
+            @for (c of categorias(); track c.id) {
+              <option [value]="c.id">{{ c.nombre['es'] || c.slug }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>URL del producto (slug) <em>obligatorio</em></span>
+          <div class="fila-slug">
+            <input type="text" name="slug" [ngModel]="slug()" (ngModelChange)="slug.set($event)">
+            <button type="button" (click)="generarSlug()" title="Generar desde el nombre">Auto</button>
+          </div>
+        </label>
+
+        <label>
+          <span>Precio en pesos <em>obligatorio</em></span>
+          <input type="number" name="precio" min="0" step="1000"
+                 [ngModel]="precioCop()" (ngModelChange)="precioCop.set($event)">
+        </label>
+
+        <label>
+          <span>Tallas</span>
+          <input type="text" name="tallas" placeholder="S, M, L, XL"
+                 [ngModel]="tallasTexto()" (ngModelChange)="tallasTexto.set($event)">
+          <small>Separadas por coma. Déjalo vacío si no aplica.</small>
+        </label>
+
+        <label>
+          <span>Stock</span>
+          <input type="number" name="stock" min="0"
+                 [ngModel]="stock()" (ngModelChange)="stock.set($event)">
+        </label>
+
+        <label class="casilla">
+          <input type="checkbox" name="destacado"
+                 [ngModel]="destacado()" (ngModelChange)="destacado.set($event)">
+          <span>Destacado — aparece primero en el catálogo</span>
+        </label>
+
+        <label class="casilla">
+          <input type="checkbox" name="activo"
+                 [ngModel]="activo()" (ngModelChange)="activo.set($event)">
+          <span>Publicado — visible en la tienda</span>
+        </label>
+      </aside>
+
+      <!-- ═══ Imagen ══════════════════════════ -->
+      <section class="bloque bloque--ancho">
+        <h2>Imagen</h2>
+
+        <div class="imagen">
+          <div class="imagen__vista">
+            @if (imagenUrl()) {
+              <img [src]="imagenUrl()" alt="">
+            } @else {
+              <span class="imagen__hueco">Sin imagen</span>
+            }
+          </div>
+
+          <div class="imagen__acciones">
+            <input type="file" id="archivo" accept="image/*" (change)="subirImagen($event)" hidden>
+            <label class="btn-secundario" for="archivo">
+              {{ subiendo() ? 'Subiendo…' : 'Elegir imagen' }}
+            </label>
+            @if (imagenUrl()) {
+              <button type="button" class="btn-texto" (click)="imagenUrl.set(null)">Quitar</button>
+            }
+            <small>JPG, PNG o WebP. Máximo 5 MB. Proporción recomendada 3:4.</small>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    @if (error()) { <p class="aviso aviso--mal" role="alert">{{ error() }}</p> }
+
+    <footer class="barra">
+      <a class="btn-secundario" routerLink="/admin/productos">Cancelar</a>
+      <button type="submit" class="btn-principal" [disabled]="!puedeGuardar() || guardando()">
+        {{ guardando() ? 'Guardando…' : (editando() ? 'Guardar cambios' : 'Crear producto') }}
+      </button>
+    </footer>
+
+  </form>
+}

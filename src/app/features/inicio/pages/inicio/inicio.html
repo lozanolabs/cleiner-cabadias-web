@@ -1,0 +1,58 @@
+<!-- ═══ PORTADA ═══════════════════════════════════════════ -->
+<section class="portada">
+  <video class="portada__video"
+         autoplay muted loop playsinline
+         poster="assets/video-inicio-poster.jpg"
+         aria-hidden="true">
+    <source src="assets/video-inicio.mp4" type="video/mp4">
+  </video>
+
+  <div class="portada__velo"></div>
+
+  <div class="portada__contenido">
+    <img src="assets/CC-LOGO.webp" alt="Cleiner Cabadías" class="portada__logo">
+    <h1 class="portada__titulo">
+      {{ 'inicio.creando' | t }}
+      <span class="portada__palabra">{{ palabra() }}<i class="cursor" aria-hidden="true"></i></span>
+    </h1>
+  </div>
+</section>
+
+<!-- ═══ MUJERES / HOMBRES ═════════════════════════════════ -->
+<section class="publicos">
+  <article class="publico">
+    <div class="publico__texto">
+      <h2 class="publico__titulo">{{ 'inicio.mujeres' | t }}</h2>
+      <p class="publico__inspirado">{{ 'inicio.mujeresInspirado' | t }}</p>
+      <p class="publico__lema">{{ 'inicio.mujeresLema' | t }}</p>
+      <a class="publico__boton" routerLink="/tienda">{{ 'inicio.comprar' | t }}</a>
+    </div>
+    <div class="publico__imagen">
+      <img src="assets/mujeres.png" [alt]="'inicio.mujeres' | t" loading="lazy">
+    </div>
+  </article>
+
+  <article class="publico publico--invertido">
+    <div class="publico__texto">
+      <h2 class="publico__titulo">{{ 'inicio.hombres' | t }}</h2>
+      <p class="publico__inspirado">{{ 'inicio.hombresInspirado' | t }}</p>
+      <p class="publico__lema">{{ 'inicio.hombresLema' | t }}</p>
+      <a class="publico__boton" routerLink="/tienda">{{ 'inicio.comprar' | t }}</a>
+    </div>
+    <div class="publico__imagen">
+      <img src="assets/HOMBRES1.png" [alt]="'inicio.hombres' | t" loading="lazy">
+    </div>
+  </article>
+</section>
+
+<!-- ═══ PROPÓSITO ═════════════════════════════════════════ -->
+<section class="proposito">
+  <img class="proposito__fondo" src="assets/proposito.jpg" alt="" loading="lazy">
+  <div class="proposito__velo"></div>
+
+  <div class="proposito__contenido">
+    <h2 class="proposito__titulo">{{ 'menu.proposito' | t }}</h2>
+    <p class="proposito__texto">{{ 'inicio.propositoExtracto' | t }}</p>
+    <a class="proposito__boton" routerLink="/por-que-lo-hacemos">{{ 'inicio.leerMas' | t }}</a>
+  </div>
+</section>

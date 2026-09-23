@@ -1,0 +1,84 @@
+<section class="carrito contenedor">
+
+  @if (carrito.vacio()) {
+    <div class="carrito__vacio">
+      <svg viewBox="0 0 24 24" width="56" height="56" fill="none"
+           stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+        <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.5a2 2 0 0 0 2-1.6L20.5 8H6"/>
+        <circle cx="10" cy="20" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="17.5" cy="20" r="1.3" fill="currentColor" stroke="none"/>
+      </svg>
+      <h1>{{ 'carrito.vacio' | t }}</h1>
+      <a class="boton-principal" routerLink="/tienda">{{ 'carrito.irTienda' | t }}</a>
+    </div>
+  } @else {
+    <header class="carrito__encabezado">
+      <h1>{{ 'carrito.titulo' | t }}</h1>
+      <p class="carrito__conteo">{{ carrito.cantidad() }} {{ 'carrito.articulos' | t }}</p>
+    </header>
+
+    <div class="carrito__cuerpo">
+
+      <ul class="lista">
+        @for (item of carrito.items(); track item.productoId + (item.talla ?? '')) {
+          <li class="fila">
+            <a class="fila__imagen" [routerLink]="['/tienda/producto', item.slug]">
+              <img [src]="item.imagenUrl || 'assets/placeholder.svg'" [alt]="item.nombre"
+                   width="110" height="140" loading="lazy">
+            </a>
+
+            <div class="fila__info">
+              <a class="fila__nombre" [routerLink]="['/tienda/producto', item.slug]">{{ item.nombre }}</a>
+              @if (item.talla) {
+                <span class="fila__talla">{{ 'producto.talla' | t }} {{ item.talla }}</span>
+              }
+              <app-precio class="fila__unitario" [cop]="item.precio" />
+            </div>
+
+            <div class="fila__cantidad">
+              <button type="button"
+                      (click)="carrito.actualizarCantidad(item.productoId, item.cantidad - 1, item.talla)"
+                      [attr.aria-label]="'producto.quitarUno' | t">−</button>
+              <span aria-live="polite">{{ item.cantidad }}</span>
+              <button type="button"
+                      (click)="carrito.actualizarCantidad(item.productoId, item.cantidad + 1, item.talla)"
+                      [attr.aria-label]="'producto.sumarUno' | t">+</button>
+            </div>
+
+            <div class="fila__total">
+              <app-precio [cop]="item.precio * item.cantidad" />
+            </div>
+
+            <button type="button" class="fila__eliminar"
+                    (click)="carrito.eliminar(item.productoId, item.talla)"
+                    [attr.aria-label]="'carrito.eliminar' | t">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none"
+                   stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18"/>
+              </svg>
+            </button>
+          </li>
+        }
+      </ul>
+
+      <aside class="resumen">
+        <h2>{{ 'carrito.resumen' | t }}</h2>
+
+        <div class="resumen__linea">
+          <span>{{ 'carrito.subtotal' | t }}</span>
+          <app-precio [cop]="carrito.subtotal()" />
+        </div>
+
+        <div class="resumen__linea resumen__linea--tenue">
+          <span>{{ 'carrito.envio' | t }}</span>
+          <span>{{ 'carrito.envioNota' | t }}</span>
+        </div>
+
+        <a class="boton-principal" routerLink="/checkout">{{ 'carrito.finalizar' | t }}</a>
+
+        <a class="resumen__seguir" routerLink="/tienda">{{ 'carrito.seguirComprando' | t }}</a>
+      </aside>
+
+    </div>
+  }
+</section>

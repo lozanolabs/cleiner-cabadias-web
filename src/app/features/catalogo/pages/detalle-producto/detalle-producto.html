@@ -1,0 +1,70 @@
+@if (cargando()) {
+  <div class="detalle detalle--esqueleto">
+    <div class="esqueleto esqueleto--imagen"></div>
+    <div class="esqueleto esqueleto--texto"></div>
+  </div>
+} @else if (noEncontrado()) {
+  <section class="detalle__vacio">
+    <h1>{{ 'producto.noExiste' | t }}</h1>
+    <a routerLink="/tienda">{{ 'producto.volverTienda' | t }}</a>
+  </section>
+} @else if (producto(); as p) {
+  <article class="detalle">
+
+    <div class="detalle__galeria">
+      <img [src]="p.imagenUrl || 'assets/placeholder.svg'" [alt]="p.nombre"
+           width="800" height="1000">
+    </div>
+
+    <div class="detalle__info">
+      <nav class="miga">
+        <a routerLink="/tienda">{{ 'menu.tienda' | t }}</a>
+        <span aria-hidden="true">/</span>
+        <a [routerLink]="['/tienda', p.categoriaSlug]">{{ p.categoriaSlug }}</a>
+      </nav>
+
+      <h1 class="detalle__nombre">{{ p.nombre }}</h1>
+
+      <app-precio [cop]="p.precio" />
+
+      @if (p.descripcion) {
+        <p class="detalle__descripcion">{{ p.descripcion }}</p>
+      }
+
+      @if (p.tallas?.length) {
+        <fieldset class="tallas">
+          <legend>{{ 'producto.talla' | t }}</legend>
+          @for (t of p.tallas; track t) {
+            <button type="button"
+                    class="tallas__opcion"
+                    [class.elegida]="tallaElegida() === t"
+                    [attr.aria-pressed]="tallaElegida() === t"
+                    (click)="elegirTalla(t)">{{ t }}</button>
+          }
+        </fieldset>
+      }
+
+      <div class="cantidad">
+        <button type="button" (click)="cambiarCantidad(-1)"
+                [disabled]="cantidad() === 1"
+                [attr.aria-label]="'producto.quitarUno' | t">−</button>
+        <span aria-live="polite">{{ cantidad() }}</span>
+        <button type="button" (click)="cambiarCantidad(1)"
+                [attr.aria-label]="'producto.sumarUno' | t">+</button>
+      </div>
+
+      <button type="button" class="agregar"
+              [disabled]="!puedeAgregar()"
+              (click)="agregar()">
+        {{ (puedeAgregar() ? 'producto.agregar' : 'producto.elijaTalla') | t }}
+      </button>
+
+      @if (agregado()) {
+        <p class="aviso" role="status">
+          {{ 'producto.agregado' | t }}
+          <a routerLink="/carrito">{{ 'carrito.ver' | t }}</a>
+        </p>
+      }
+    </div>
+  </article>
+}

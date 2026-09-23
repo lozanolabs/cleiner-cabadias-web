@@ -1,0 +1,27 @@
+<section class="catalogo contenedor">
+  <header class="catalogo__encabezado">
+    <h1>{{ tituloCategoria() }}</h1>
+  <p class="catalogo__conteo">{{ catalogo.total() }} {{ 'catalogo.productos' | t }}</p>
+  </header>
+
+  @if (catalogo.cargando()) {
+    <div class="rejilla">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="esqueleto"></div>
+      }
+    </div>
+  } @else if (catalogo.error()) {
+    <p class="mensaje">{{ 'catalogo.error' | t }}</p>
+  } @else if (catalogo.vacio()) {
+    <p class="mensaje">
+      {{ 'catalogo.vacio' | t }}
+      <a routerLink="/tienda">{{ 'catalogo.verTodo' | t }}</a>
+    </p>
+  } @else {
+    <div class="rejilla">
+      @for (producto of catalogo.productos(); track producto.id) {
+        <app-tarjeta-producto [producto]="producto" />
+      }
+    </div>
+  }
+</section>

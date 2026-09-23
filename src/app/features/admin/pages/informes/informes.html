@@ -1,0 +1,102 @@
+<header class="cabeza">
+  <h1>Informes de ventas</h1>
+  <button type="button" class="btn-secundario" (click)="exportarCsv()"
+          [disabled]="serie().length === 0">Exportar CSV</button>
+</header>
+
+<nav class="rangos">
+  @for (r of rangos; track r.valor) {
+    <button type="button" [class.activo]="rango() === r.valor"
+            (click)="elegirRango(r.valor, r.gran)">{{ r.etiqueta }}</button>
+  }
+
+  <div class="rangos__manual">
+    <input type="date" [ngModel]="desdeManual()" (ngModelChange)="desdeManual.set($event)" name="desde">
+    <span>a</span>
+    <input type="date" [ngModel]="hastaManual()" (ngModelChange)="hastaManual.set($event)" name="hasta">
+    <button type="button" [class.activo]="rango() === 'personalizado'"
+            (click)="aplicarPersonalizado()">Aplicar</button>
+  </div>
+</nav>
+
+@if (error()) {
+  <p class="aviso aviso--mal" role="alert">No se pudieron cargar los informes.</p>
+} @else if (cargando()) {
+  <p class="vacio">Cargando…</p>
+} @else {
+
+  @if (resumen(); as r) {
+    <div class="tarjetas">
+      <div class="tarjeta">
+        <span class="tarjeta__rotulo">Total vendido</span>
+        <strong class="tarjeta__valor">{{ r.totalCop | currency:'COP':'symbol-narrow':'1.0-0' }}</strong>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta__rotulo">Órdenes</span>
+        <strong class="tarjeta__valor">{{ r.ordenes | number }}</strong>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta__rotulo">Ticket promedio</span>
+        <strong class="tarjeta__valor">{{ r.ticketPromedio | currency:'COP':'symbol-narrow':'1.0-0' }}</strong>
+      </div>
+      <div class="tarjeta">
+        <span class="tarjeta__rotulo">Unidades</span>
+        <strong class="tarjeta__valor">{{ r.unidades | number }}</strong>
+      </div>
+    </div>
+  }
+
+  @if (serie().length === 0) {
+    <p class="vacio">No hay ventas registradas en este período.</p>
+  } @else {
+    <section class="bloque">
+      <h2>Evolución de ventas</h2>
+      <div class="grafico">
+        @for (p of serie(); track p.periodo) {
+          <div class="barra" [title]="p.periodo + ' · ' + p.ordenes + ' órdenes'">
+            <div class="barra__relleno" [style.height.%]="(p.totalCop / maximoSerie()) * 100"></div>
+            <span class="barra__etiqueta">{{ p.periodo | date:'dd/MM' }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <div class="columnas">
+      <section class="bloque">
+        <h2>Productos más vendidos</h2>
+        <table class="tabla">
+          <thead>
+            <tr><th>Producto</th><th class="num">Unidades</th><th class="num">Total</th></tr>
+          </thead>
+          <tbody>
+            @for (f of top(); track f.nombre) {
+              <tr>
+                <td>{{ f.nombre }}</td>
+                <td class="num">{{ f.unidades }}</td>
+                <td class="num">{{ f.totalCop | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <section class="bloque">
+        <h2>Ventas por categoría</h2>
+        <table class="tabla">
+          <thead>
+            <tr><th>Categoría</th><th class="num">Unidades</th><th class="num">Total</th></tr>
+          </thead>
+          <tbody>
+            @for (f of categorias(); track f.categoria) {
+              <tr>
+                <td>{{ f.categoria }}</td>
+                <td class="num">{{ f.unidades }}</td>
+                <td class="num">{{ f.totalCop | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+    </div>
+  }
+}

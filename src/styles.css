@@ -1,3 +1,55 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+
+:root {
+  /* Marca */
+  --naranja-ini: #f68f3b;
+  --naranja-fin: #ca6922;
+  --naranja: #e07b2e;
+  --naranja-suave: #fdf1e6;
+
+  /* Neutros cálidos */
+  --fondo: #ffffff;
+  --fondo-alt: #faf7f3;
+  --tinta: #2a2521;
+  --tinta-media: #6b6259;
+  --tinta-tenue: #a89e94;
+  --linea: #ebe5dd;
+
+  --radio: 10px;
+  --radio-pastilla: 999px;
+  --sombra: 0 2px 14px rgba(42, 37, 33, .07);
+  --transicion: 180ms cubic-bezier(.4, 0, .2, 1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--tinta);
+  font-family: Montserrat, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; }
+
+.contenedor {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+@media (max-width: 640px) {
+  .contenedor { padding-inline: 1.15rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}

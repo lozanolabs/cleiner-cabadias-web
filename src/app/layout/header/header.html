@@ -1,0 +1,65 @@
+<header class="cabecera">
+<a class="cabecera__logo" routerLink="/">
+  <img src="assets/logo_nombre.png" alt="">
+</a>
+  <button class="hamburguesa" type="button"
+          (click)="alternar()"
+          [attr.aria-expanded]="abierto()"
+          [attr.aria-label]="(abierto() ? 'menu.cerrar' : 'menu.abrir') | t">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="navegacion" [class.navegacion--abierta]="abierto()">
+    <a routerLink="/tienda" routerLinkActive="activo"
+       [routerLinkActiveOptions]="{ exact: true }">{{ 'menu.tienda' | t }}</a>
+
+    @for (cat of categorias(); track cat.id) {
+      <a [routerLink]="['/tienda', cat.slug]" routerLinkActive="activo">{{ cat.nombre }}</a>
+    }
+  </nav>
+
+  <div class="acciones">
+    <div class="idioma">
+      <button class="idioma__actual" type="button"
+              (click)="alternarIdioma()"
+              [attr.aria-expanded]="idiomaAbierto()"
+              aria-haspopup="listbox"
+              [attr.aria-label]="'idioma.seleccionar' | t">
+        <img class="bandera" [src]="'banderas/' + idiomaActivo().bandera + '.svg'" alt="" aria-hidden="true">
+        <span class="idioma__flecha" aria-hidden="true"></span>
+      </button>
+
+      @if (idiomaAbierto()) {
+        <ul class="idioma__lista" role="listbox">
+          @for (i of idioma.disponibles; track i.codigo) {
+            <li>
+              <button type="button" role="option"
+                      [attr.aria-selected]="i.codigo === idioma.actual()"
+                      [class.seleccionado]="i.codigo === idioma.actual()"
+                      (click)="cambiarIdioma(i.codigo)">
+                <img class="bandera" [src]="'banderas/' + i.bandera + '.svg'" alt="" aria-hidden="true">
+                <span class="idioma__nombre">{{ i.nombre }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    @if (mostrarCarrito()) {
+      <a class="carrito" routerLink="/carrito" [attr.aria-label]="'carrito.ver' | t">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.5a2 2 0 0 0 2-1.6L20.5 8H6"/>
+          <circle cx="10" cy="20" r="1.3" fill="currentColor" stroke="none"/>
+          <circle cx="17.5" cy="20" r="1.3" fill="currentColor" stroke="none"/>
+        </svg>
+        @if (carrito.cantidad() > 0) {
+          <span class="carrito__contador">{{ carrito.cantidad() }}</span>
+        }
+      </a>
+    }
+
+    <a class="proposito" routerLink="/por-que-lo-hacemos">{{ 'menu.proposito' | t }}</a>
+  </div>
+</header>

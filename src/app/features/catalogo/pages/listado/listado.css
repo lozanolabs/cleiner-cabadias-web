@@ -1,0 +1,123 @@
+/* ── Contenedor de la página ─────────────── */
+.catalogo { padding-block: 3rem 5rem; }
+
+/* ── Encabezado ──────────────────────────── */
+.catalogo__encabezado {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 1.4rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--linea);
+}
+
+.catalogo__encabezado h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+.catalogo__conteo {
+  margin: 0;
+  color: var(--tinta-tenue);
+  font-size: .85rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* ── Rejilla de productos ────────────────── */
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem 2rem;
+}
+
+/* ── Mensajes de estado ──────────────────── */
+.mensaje {
+  padding: 4rem 0;
+  text-align: center;
+  color: var(--tinta-media);
+}
+.mensaje a { color: var(--naranja); font-weight: 600; }
+
+/* ── Esqueleto de carga ──────────────────── */
+.esqueleto {
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radio);
+  background: linear-gradient(100deg, var(--fondo-alt) 30%, #f2ede6 50%, var(--fondo-alt) 70%);
+  background-size: 200% 100%;
+  animation: brillo 1.4s infinite;
+}
+@keyframes brillo { to { background-position: -200% 0; } }
+
+/* ── Paginación ──────────────────────────── */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .35rem;
+  margin-top: 4rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--linea);
+}
+
+.paginacion__num,
+.paginacion__flecha {
+  min-width: 40px;
+  height: 40px;
+  padding-inline: .6rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radio);
+  color: var(--tinta-media);
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transicion);
+}
+
+.paginacion__num:hover:not(.actual),
+.paginacion__flecha:hover:not(:disabled) {
+  background: var(--fondo-alt);
+  color: var(--tinta);
+}
+
+.paginacion__num.actual {
+  background: linear-gradient(90deg, var(--naranja-ini), var(--naranja-fin));
+  color: #fff;
+  font-weight: 700;
+  cursor: default;
+}
+
+.paginacion__flecha { font-size: 1.3rem; line-height: 1; }
+.paginacion__flecha:disabled { color: var(--tinta-tenue); cursor: not-allowed; opacity: .5; }
+
+.paginacion__elipsis {
+  min-width: 28px;
+  text-align: center;
+  color: var(--tinta-tenue);
+}
+
+.paginacion__num:focus-visible,
+.paginacion__flecha:focus-visible {
+  outline: 2px solid var(--naranja);
+  outline-offset: 2px;
+}
+
+/* ── Adaptación a pantallas menores ──────── */
+@media (max-width: 900px) {
+  .rejilla { grid-template-columns: repeat(2, 1fr); gap: 2rem 1.5rem; }
+}
+
+@media (max-width: 640px) {
+  .catalogo { padding-block: 2rem 3.5rem; }
+  .catalogo__encabezado { flex-direction: column; gap: .25rem; align-items: flex-start; }
+  .paginacion { margin-top: 2.5rem; padding-top: 1.75rem; }
+  .paginacion__num, .paginacion__flecha { min-width: 36px; height: 36px; font-size: .85rem; }
+}
+
+@media (max-width: 560px) {
+  .rejilla { grid-template-columns: 1fr; gap: 2rem; }
+}

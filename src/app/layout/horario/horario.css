@@ -1,0 +1,92 @@
+.horario { padding-block: 4.5rem 5rem; }
+
+.horario__cuerpo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.horario__icono {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 1.3rem;
+  border: 2px solid var(--naranja);
+  border-radius: 50%;
+  color: var(--naranja);
+}
+
+.horario__ante {
+  margin: 0 0 .45rem;
+  color: var(--naranja);
+  font-size: .95rem;
+  font-weight: 600;
+}
+
+.horario__titulo {
+  margin: 0 0 2.2rem;
+  font-size: clamp(1.7rem, 4vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+  color: var(--tinta);
+  max-width: 20ch;
+}
+
+/* ── Tabla ───────────────────────────────── */
+.tabla {
+  list-style: none;
+  margin: 0 0 2.2rem;
+  padding: 0;
+  width: 100%;
+  max-width: 660px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra);
+}
+
+.tabla__fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.05rem 1.4rem;
+  font-size: .98rem;
+  text-align: left;
+}
+.tabla__fila + .tabla__fila { border-top: 1px solid var(--linea); }
+
+.tabla__fila--cerrado {
+  background: linear-gradient(90deg, var(--naranja-ini), var(--naranja-fin));
+  border-top-color: rgba(255, 255, 255, .28);
+  color: #fff;
+  font-weight: 500;
+}
+
+/* ── Botón de WhatsApp ───────────────────── */
+.horario__wa {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .95rem 2.2rem;
+  background: #25d366;
+  border-radius: var(--radio-pastilla);
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.02rem;
+  font-weight: 700;
+  transition: filter var(--transicion), transform var(--transicion);
+}
+.horario__wa:hover { filter: brightness(1.06); }
+.horario__wa:active { transform: translateY(1px); }
+.horario__wa:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; }
+
+/* ── Adaptación ──────────────────────────── */
+@media (max-width: 560px) {
+  .horario { padding-block: 3rem 3.5rem; }
+  .tabla__fila { flex-direction: column; align-items: flex-start; gap: .2rem; padding: .9rem 1.1rem; }
+  .horario__wa { width: 100%; justify-content: center; padding-inline: 1rem; }
+}

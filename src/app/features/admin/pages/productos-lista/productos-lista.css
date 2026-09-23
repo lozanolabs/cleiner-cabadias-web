@@ -1,0 +1,159 @@
+:host { display: block; }
+
+.cabeza {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.cabeza h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; }
+.cabeza__conteo { margin: .2rem 0 0; font-size: .85rem; color: var(--tinta-tenue); }
+
+.btn-principal {
+  padding: .7rem 1.4rem;
+  background: linear-gradient(90deg, var(--naranja-ini), var(--naranja-fin));
+  border: 0;
+  border-radius: var(--radio-pastilla);
+  color: #fff;
+  text-decoration: none;
+  font-size: .9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.buscador {
+  width: 100%;
+  max-width: 340px;
+  margin-bottom: 1.25rem;
+  padding: .65rem .9rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  font: inherit;
+  font-size: .92rem;
+  background: var(--fondo);
+}
+.buscador:focus { outline: 2px solid var(--naranja); outline-offset: 1px; }
+
+.aviso {
+  margin: 0 0 1rem;
+  padding: .7rem 1rem;
+  border-radius: var(--radio);
+  font-size: .88rem;
+}
+.aviso--ok  { background: #e8f5e9; color: #1f6b2a; }
+.aviso--mal { background: #fdecea; color: #a3281c; }
+
+.vacio { padding: 3rem 0; text-align: center; color: var(--tinta-tenue); }
+
+/* ── Tabla ───────────────────────────────── */
+.tabla-envoltura {
+  overflow-x: auto;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+}
+
+.tabla { width: 100%; border-collapse: collapse; font-size: .9rem; }
+
+.tabla th {
+  padding: .8rem 1rem;
+  text-align: left;
+  font-size: .74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--tinta-media);
+  border-bottom: 1px solid var(--linea);
+  white-space: nowrap;
+}
+
+.tabla td { padding: .75rem 1rem; border-bottom: 1px solid var(--linea); vertical-align: middle; }
+.tabla tr:last-child td { border-bottom: 0; }
+.tabla .num { text-align: right; }
+
+tr.inactivo { opacity: .5; }
+
+.mini { display: block; width: 44px; height: 56px; object-fit: cover; border-radius: 6px; background: var(--fondo-alt); }
+
+.nombre { display: block; color: var(--tinta); text-decoration: none; font-weight: 600; }
+.nombre:hover { color: var(--naranja-fin); }
+.slug { display: block; font-size: .76rem; color: var(--tinta-tenue); }
+
+.etiqueta {
+  display: inline-block;
+  margin-top: .25rem;
+  padding: .1rem .45rem;
+  background: var(--naranja-suave);
+  border-radius: 4px;
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--naranja-fin);
+}
+
+.sin-stock { color: #c0392b; font-weight: 700; }
+
+.pastilla {
+  display: inline-block;
+  padding: .2rem .6rem;
+  border-radius: 999px;
+  background: var(--fondo-alt);
+  font-size: .76rem;
+  font-weight: 600;
+  color: var(--tinta-media);
+}
+.pastilla--on { background: #e8f5e9; color: #1f6b2a; }
+
+.acciones { display: flex; gap: .5rem; white-space: nowrap; }
+.acciones a, .acciones button {
+  padding: .35rem .7rem;
+  background: transparent;
+  border: 1px solid var(--linea);
+  border-radius: 6px;
+  color: var(--tinta-media);
+  font: inherit;
+  font-size: .8rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transicion);
+}
+.acciones a:hover, .acciones button:hover { background: var(--fondo-alt); color: var(--tinta); }
+.acciones .peligro { color: #c0392b; border-color: #f0d0cb; }
+.acciones .peligro:hover { background: #fdecea; }
+
+/* ── Diálogo ─────────────────────────────── */
+.velo { position: fixed; inset: 0; background: rgba(0, 0, 0, .35); z-index: 90; }
+
+.dialogo {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 91;
+  width: min(440px, calc(100vw - 2.5rem));
+  padding: 1.75rem;
+  background: var(--fondo);
+  border-radius: var(--radio);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, .2);
+}
+.dialogo h2 { margin: 0 0 .7rem; font-size: 1.1rem; font-weight: 700; }
+.dialogo p { margin: 0 0 1.4rem; font-size: .9rem; color: var(--tinta-media); line-height: 1.55; }
+
+.dialogo__botones { display: flex; justify-content: flex-end; gap: .6rem; }
+.dialogo__botones button {
+  padding: .6rem 1.2rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background: var(--fondo);
+  font: inherit;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.dialogo__botones .peligro { background: #c0392b; border-color: #c0392b; color: #fff; font-weight: 600; }
+
+@media (max-width: 700px) {
+  .cabeza { flex-direction: column; }
+  .acciones { flex-direction: column; }
+}

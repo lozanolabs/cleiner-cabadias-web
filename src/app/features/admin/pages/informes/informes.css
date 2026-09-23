@@ -1,0 +1,163 @@
+:host { display: block; }
+
+.cabeza {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.cabeza h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; }
+
+.btn-secundario {
+  padding: .6rem 1.2rem;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-pastilla);
+  font: inherit;
+  font-size: .88rem;
+  color: var(--tinta-media);
+  cursor: pointer;
+}
+.btn-secundario:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Selector de rango ───────────────────── */
+.rangos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+  margin-bottom: 1.5rem;
+}
+.rangos > button, .rangos__manual button {
+  padding: .5rem 1rem;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-pastilla);
+  font: inherit;
+  font-size: .85rem;
+  color: var(--tinta-media);
+  cursor: pointer;
+  transition: all var(--transicion);
+}
+.rangos button:hover { background: var(--fondo-alt); }
+.rangos button.activo {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: #fff;
+  font-weight: 600;
+}
+
+.rangos__manual { display: flex; align-items: center; gap: .4rem; margin-left: auto; }
+.rangos__manual input {
+  padding: .45rem .6rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  font: inherit;
+  font-size: .84rem;
+  background: var(--fondo);
+}
+.rangos__manual span { font-size: .84rem; color: var(--tinta-tenue); }
+
+/* ── Tarjetas de resumen ─────────────────── */
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.tarjeta {
+  padding: 1.2rem 1.3rem;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+}
+.tarjeta__rotulo {
+  display: block;
+  margin-bottom: .4rem;
+  font-size: .74rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--tinta-tenue);
+}
+.tarjeta__valor { font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; }
+
+/* ── Bloques ─────────────────────────────── */
+.bloque {
+  padding: 1.5rem;
+  background: var(--fondo);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  margin-bottom: 1.25rem;
+}
+.bloque h2 {
+  margin: 0 0 1.3rem;
+  font-size: .76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--tinta-media);
+}
+
+.columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.columnas .bloque { margin-bottom: 0; }
+
+/* ── Gráfico de barras ───────────────────── */
+.grafico {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 220px;
+  overflow-x: auto;
+  padding-bottom: 1.5rem;
+}
+.barra {
+  position: relative;
+  flex: 1 0 22px;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.barra__relleno {
+  width: 100%;
+  min-height: 2px;
+  background: linear-gradient(180deg, var(--naranja-ini), var(--naranja-fin));
+  border-radius: 4px 4px 0 0;
+  transition: opacity var(--transicion);
+}
+.barra:hover .barra__relleno { opacity: .75; }
+.barra__etiqueta {
+  position: absolute;
+  bottom: -1.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: .68rem;
+  color: var(--tinta-tenue);
+  white-space: nowrap;
+}
+
+/* ── Tablas ──────────────────────────────── */
+.tabla { width: 100%; border-collapse: collapse; font-size: .89rem; }
+.tabla th {
+  padding: .55rem .7rem;
+  text-align: left;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--tinta-media);
+  border-bottom: 1px solid var(--linea);
+}
+.tabla td { padding: .6rem .7rem; border-bottom: 1px solid var(--linea); }
+.tabla tr:last-child td { border-bottom: 0; }
+.tabla .num { text-align: right; white-space: nowrap; }
+
+.vacio { padding: 3rem 0; text-align: center; color: var(--tinta-tenue); }
+.aviso { padding: .7rem 1rem; border-radius: var(--radio); font-size: .88rem; }
+.aviso--mal { background: #fdecea; color: #a3281c; }
+
+@media (max-width: 900px) {
+  .columnas { grid-template-columns: 1fr; }
+  .rangos__manual { margin-left: 0; width: 100%; }
+}
