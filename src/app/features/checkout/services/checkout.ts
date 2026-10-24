@@ -14,20 +14,34 @@ export interface ResumenPedido {
 export class Checkout {
   private readonly db = inject(Supabase).client;
 
-  /** Tarifa de envío, leída de la configuración de la tienda. */
-  private readonly recursoEnvio = resource({
+  /** Configuración de la tienda: tarifa de envío y si las ventas están abiertas. */
+  private readonly recursoConfig = resource({
     loader: async () => {
       const { data } = await this.db
-        .from('configuracion').select('valor').eq('clave', 'envio').maybeSingle();
+        .from('configuracion')
+        .select('clave, valor')
+        .in('clave', ['envio', 'ventas']);
+
+      const mapa = new Map((data ?? []).map((r: any) => [r.clave, r.valor]));
+      const envio: any = mapa.get('envio') ?? {};
+      const ventas: any = mapa.get('ventas') ?? {};
+
       return {
-        tarifa: Number(data?.valor?.tarifa_cop ?? 0),
-        gratisDesde: data?.valor?.gratis_desde_cop ? Number(data.valor.gratis_desde_cop) : null
+        tarifa: Number(envio?.tarifa_cop ?? 0),
+        gratisDesde: envio?.gratis_desde_cop ? Number(envio.gratis_desde_cop) : null,
+        // Falla cerrado: solo el valor exacto true habilita las ventas.
+        ventasHabilitadas: ventas?.habilitadas === true,
+        mensajeCierre: typeof ventas?.mensaje === 'string' ? ventas.mensaje : null
       };
     }
   });
 
-  readonly tarifaEnvio = computed(() => this.recursoEnvio.value()?.tarifa ?? 0);
-  readonly gratisDesde = computed(() => this.recursoEnvio.value()?.gratisDesde ?? null);
+  readonly tarifaEnvio = computed(() => this.recursoConfig.value()?.tarifa ?? 0);
+  readonly gratisDesde = computed(() => this.recursoConfig.value()?.gratisDesde ?? null);
+
+  /** Mientras carga la configuración también devuelve false, a propósito. */
+  readonly ventasHabilitadas = computed(() => this.recursoConfig.value()?.ventasHabilitadas ?? false);
+  readonly mensajeCierre = computed(() => this.recursoConfig.value()?.mensajeCierre ?? null);
 
   envioPara(subtotal: number): number {
     const gratis = this.gratisDesde();

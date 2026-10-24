@@ -62,20 +62,26 @@ export default async (req: Request) => {
     return new Response('ok');                            // 200 para que Wompi no reintente
   }
 
-  // Wompi reintenta: si ya quedó pagado, no volvemos a descontar inventario.
+  // Wompi reintenta: si ya quedó pagado, no volvemos a descontar inventario
+  // ni a reencolar la factura.
   if (pedido.estado === 'pagado') return new Response('ok');
 
   const nuevoEstado = MAPA_ESTADOS[tx.status] ?? 'pendiente_pago';
+  const aprobado = tx.status === 'APPROVED';
 
   await db.from('pedidos').update({
     estado: nuevoEstado,
     wompi_transaction_id: tx.id,
     wompi_estado: tx.status,
     wompi_metodo: tx.payment_method_type ?? null,
-    pagado_en: tx.status === 'APPROVED' ? new Date().toISOString() : null
+    pagado_en: aprobado ? new Date().toISOString() : null,
+    // Solo se factura lo pagado. Facturar aquí mismo arriesgaría el
+    // tiempo de respuesta del webhook, así que solo se encola:
+    // facturar-pendientes.mts lo recoge en minutos.
+    alegra_estado: aprobado ? 'pendiente' : 'no_requiere'
   }).eq('id', pedido.id);
 
-  if (tx.status === 'APPROVED') {
+  if (aprobado) {
     const { error } = await db.rpc('descontar_stock', { p_pedido_id: pedido.id });
     if (error) console.error('No se pudo descontar inventario:', error);
   }

@@ -1,4 +1,3 @@
-<p>pago works!</p>
 <section class="pago contenedor">
   <h1 class="pago__titulo">{{ 'checkout.titulo' | t }}</h1>
 
@@ -174,8 +173,14 @@
         <app-precio [cop]="total()" />
       </div>
 
+         @if (!checkout.ventasHabilitadas()) {
+        <p class="aviso aviso--cerrado" role="status">
+          {{ 'checkout.ventasCerradas' | t }}
+        </p>
+      }
+
       <button type="submit" class="btn-pagar"
-              [disabled]="!puedePagar() || enviando()">
+              [disabled]="!puedePagar() || enviando() || !checkout.ventasHabilitadas()">
         {{ (enviando() ? 'checkout.procesando' : 'checkout.pagar') | t }}
       </button>
 
