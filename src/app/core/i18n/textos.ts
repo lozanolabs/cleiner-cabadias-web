@@ -111,6 +111,7 @@ export const TEXTOS = {
     'producto.agotado':       { es: 'Agotado', en: 'Sold out', fr: 'Épuisé', it: 'Esaurito', pt: 'Esgotado' },
   'producto.agotadoNota':   { es: 'Esta pieza está agotada por ahora. Escríbenos si quieres encargarla.', en: 'This piece is sold out for now. Message us if you would like to order it.', fr: 'Cette pièce est épuisée pour le moment. Écrivez-nous si vous souhaitez la commander.', it: 'Questo capo è esaurito per ora. Scrivici se desideri ordinarlo.', pt: 'Esta peça está esgotada por agora. Escreva-nos se quiser encomendá-la.' },
   'producto.pocasUnidades': { es: 'Quedan pocas unidades:', en: 'Only a few left:', fr: 'Il n\'en reste que quelques-unes :', it: 'Ne restano poche:', pt: 'Restam poucas unidades:' },
+    'checkout.ventasCerradas': { es: 'La tienda está en vista previa. Las compras estarán disponibles muy pronto.', en: 'The store is in preview. Purchases will be available very soon.', fr: 'La boutique est en avant-première. Les achats seront disponibles très bientôt.', it: 'Il negozio è in anteprima. Gli acquisti saranno disponibili molto presto.', pt: 'A loja está em pré-visualização. As compras estarão disponíveis muito em breve.' },
 } as const satisfies Record<string, Traduccion>;
 
 export type ClaveTexto = keyof typeof TEXTOS;
