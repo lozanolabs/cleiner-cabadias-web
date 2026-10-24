@@ -1,0 +1,76 @@
+.wa {
+  position: fixed;
+  right: 1.25rem;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  z-index: 900;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+
+  height: 56px;
+  padding: 0 16px;
+
+  background: #25d366;
+  border-radius: 999px;
+  color: #fff;
+  text-decoration: none;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .22);
+  transition: transform 220ms cubic-bezier(.22, 1, .36, 1),
+              box-shadow 220ms ease,
+              gap 220ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.wa:hover,
+.wa:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+  gap: 10px;
+}
+
+.wa:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.wa:active { transform: translateY(0); }
+
+.wa__icono {
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+
+/* El texto aparece al pasar el cursor; en reposo es solo el círculo. */
+.wa__texto {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  font: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  transition: max-width 220ms cubic-bezier(.22, 1, .36, 1), opacity 160ms ease;
+}
+
+.wa:hover .wa__texto,
+.wa:focus-visible .wa__texto {
+  max-width: 180px;
+  opacity: 1;
+}
+
+/* En táctil no hay hover: deja solo el círculo, sin saltos. */
+@media (hover: none) {
+  .wa { padding: 0; width: 56px; justify-content: center; }
+  .wa__texto { display: none; }
+}
+
+@media (max-width: 600px) {
+  .wa { right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa, .wa__texto { transition: none; }
+  .wa:hover, .wa:focus-visible { transform: none; }
+}

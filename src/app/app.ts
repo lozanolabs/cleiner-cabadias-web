@@ -4,11 +4,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { Header } from './layout/header/header';
 import { Footer } from './layout/footer/footer';
-import { Horario } from './layout/horario/horario';
+import { TPipe } from './core/i18n/t.pipe';
+import { BotonWhatsapp } from './shared/ui/boton-whatsapp/boton-whatsapp';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, Horario],
+  imports: [RouterOutlet, Header, Footer, TPipe, BotonWhatsapp],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

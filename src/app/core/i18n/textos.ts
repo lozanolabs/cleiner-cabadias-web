@@ -112,6 +112,8 @@ export const TEXTOS = {
   'producto.agotadoNota':   { es: 'Esta pieza está agotada por ahora. Escríbenos si quieres encargarla.', en: 'This piece is sold out for now. Message us if you would like to order it.', fr: 'Cette pièce est épuisée pour le moment. Écrivez-nous si vous souhaitez la commander.', it: 'Questo capo è esaurito per ora. Scrivici se desideri ordinarlo.', pt: 'Esta peça está esgotada por agora. Escreva-nos se quiser encomendá-la.' },
   'producto.pocasUnidades': { es: 'Quedan pocas unidades:', en: 'Only a few left:', fr: 'Il n\'en reste que quelques-unes :', it: 'Ne restano poche:', pt: 'Restam poucas unidades:' },
   'checkout.ventasCerradas': { es: 'La tienda está en vista previa. Las compras estarán disponibles muy pronto.', en: 'The store is in preview. Purchases will be available very soon.', fr: 'La boutique est en avant-première. Les achats seront disponibles très bientôt.', it: 'Il negozio è in anteprima. Gli acquisti saranno disponibili molto presto.', pt: 'A loja está em pré-visualização. As compras estarão disponíveis muito em breve.' },
+  'whatsapp.escribenos': { es: 'Escríbenos', en: 'Message us on WhatsApp', fr: 'Écrivez-nous sur WhatsApp', it: 'Scrivici su WhatsApp', pt: 'Fale conosco no WhatsApp' },
+  'whatsapp.mensaje': { es: 'Hola, vengo de la tienda en línea y quisiera más información.', en: 'Hi, I came from the online store and would like more information.', fr: 'Bonjour, je viens de la boutique en ligne et je souhaite plus d\'informations.', it: 'Ciao, vengo dal negozio online e vorrei maggiori informazioni.', pt: 'Olá, venho da loja online e gostaria de mais informações.' },
 } as const satisfies Record<string, Traduccion>;
 
 export type ClaveTexto = keyof typeof TEXTOS;

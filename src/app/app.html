@@ -6,6 +6,9 @@
 </main>
 
 @if (esPublico()) {
-  <app-horario />
   <app-footer />
+  <app-boton-whatsapp
+  numero="573206523244"
+  [mensaje]="'whatsapp.mensaje' | t"
+  [etiqueta]="'whatsapp.escribenos' | t" />
 }

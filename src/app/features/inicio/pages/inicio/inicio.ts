@@ -3,6 +3,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TPipe } from '../../../../core/i18n/t.pipe';
 import { Idioma } from '../../../../core/i18n/idioma';
+import { Horario } from '../../../../layout/horario/horario';
+
+
 
 const PALABRAS: Record<string, string[]> = {
   es: ['Identidad', 'Cultura', 'Diferencia', 'Historia'],
@@ -14,7 +17,7 @@ const PALABRAS: Record<string, string[]> = {
 
 @Component({
   selector: 'app-inicio',
-  imports: [RouterLink, TPipe],
+  imports: [RouterLink, TPipe, Horario],
   templateUrl: './inicio.html',
   styleUrl: './inicio.css',
   changeDetection: ChangeDetectionStrategy.OnPush
