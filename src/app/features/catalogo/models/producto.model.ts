@@ -4,9 +4,11 @@ export interface Producto {
   nombre: string;
   descripcion: string;
   precio: number;
-  imagenUrl: string;
+  imagenUrl: string;          // la principal, para la tarjeta
+  imagenes: string[];         // galería completa, la principal de primera
+  tallas: string[];
   categoriaSlug: string;
-  tallas: string[]; 
+  categoriaNombre: string;    // ya traducido
 }
 
 export interface Categoria {

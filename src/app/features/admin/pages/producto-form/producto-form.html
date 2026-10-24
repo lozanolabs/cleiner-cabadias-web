@@ -79,10 +79,10 @@
         </label>
 
         <label>
-          <span>Tallas</span>
+          <span>Tallas <em>obligatorio</em></span>
           <input type="text" name="tallas" placeholder="S, M, L, XL"
                  [ngModel]="tallasTexto()" (ngModelChange)="tallasTexto.set($event)">
-          <small>Separadas por coma. Déjalo vacío si no aplica.</small>
+          <small>Separadas por coma. Si la pieza es única, escribe «Talla única».</small>
         </label>
 
         <label>
@@ -104,30 +104,38 @@
         </label>
       </aside>
 
-      <!-- ═══ Imagen ══════════════════════════ -->
+      <!-- ═══ Imágenes ════════════════════════ -->
       <section class="bloque bloque--ancho">
-        <h2>Imagen</h2>
+        <h2>Imágenes</h2>
 
-        <div class="imagen">
-          <div class="imagen__vista">
-            @if (imagenUrl()) {
-              <img [src]="imagenUrl()" alt="">
-            } @else {
-              <span class="imagen__hueco">Sin imagen</span>
-            }
-          </div>
+        <div class="galeria-admin">
+          @for (img of imagenes(); track img; let i = $index) {
+            <figure class="mini" [class.mini--principal]="i === 0">
+              <img [src]="img" alt="">
+              @if (i === 0) { <figcaption>Principal</figcaption> }
+              <div class="mini__acciones">
+                @if (i > 0) {
+                  <button type="button" (click)="hacerPrincipal(img)"
+                          title="Usar como principal">★</button>
+                }
+                <button type="button" (click)="quitarImagen(img)" title="Quitar">✕</button>
+              </div>
+            </figure>
+          }
 
-          <div class="imagen__acciones">
-            <input type="file" id="archivo" accept="image/*" (change)="subirImagen($event)" hidden>
-            <label class="btn-secundario" for="archivo">
-              {{ subiendo() ? 'Subiendo…' : 'Elegir imagen' }}
+          @if (imagenes().length < maxImagenes) {
+            <label class="mini-agregar" for="archivo">
+              <input type="file" id="archivo" accept="image/*" multiple hidden
+                     (change)="subirImagenes($event)">
+              <span>{{ subiendo() ? 'Subiendo…' : '+ Agregar' }}</span>
             </label>
-            @if (imagenUrl()) {
-              <button type="button" class="btn-texto" (click)="imagenUrl.set(null)">Quitar</button>
-            }
-            <small>JPG, PNG o WebP. Máximo 5 MB. Proporción recomendada 3:4.</small>
-          </div>
+          }
         </div>
+
+        <small class="pie-imagenes">
+          Hasta {{ maxImagenes }} imágenes. La primera es la que se ve en el catálogo;
+          usa ★ para cambiarla. JPG, PNG o WebP, máximo 5 MB. Proporción recomendada 3:4.
+        </small>
       </section>
 
     </div>

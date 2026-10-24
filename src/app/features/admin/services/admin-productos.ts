@@ -13,6 +13,7 @@ export interface ProductoAdmin {
   descripcion: TextoMultiidioma;
   precioCop: number;
   imagenUrl: string | null;
+  imagenes: string[];
   tallas: string[];
   stock: number;
   destacado: boolean;
@@ -23,7 +24,7 @@ export type ProductoNuevo = Omit<ProductoAdmin, 'id' | 'categoriaSlug'>;
 
 const CAMPOS = `
   id, categoria_id, slug, nombre, descripcion, precio_cop,
-  imagen_url, tallas, stock, destacado, activo,
+  imagen_url, imagenes, tallas, stock, destacado, activo,
   categorias(slug)
 `;
 
@@ -78,7 +79,7 @@ export class AdminProductos {
   /** Sube la imagen al bucket y devuelve su URL pública. */
   async subirImagen(archivo: File, slug: string): Promise<string> {
     const ext = archivo.name.split('.').pop()?.toLowerCase() ?? 'jpg';
-    const ruta = `${slug}-${Date.now()}.${ext}`;
+    const ruta = `${slug}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
 
     const { error } = await this.db.storage
       .from('productos')
@@ -91,6 +92,8 @@ export class AdminProductos {
   }
 
   private mapear(f: any): ProductoAdmin {
+    const extras: string[] = Array.isArray(f.imagenes) ? f.imagenes.filter(Boolean) : [];
+
     return {
       id: f.id,
       categoriaId: f.categoria_id,
@@ -100,6 +103,7 @@ export class AdminProductos {
       descripcion: f.descripcion ?? {},
       precioCop: f.precio_cop,
       imagenUrl: f.imagen_url,
+      imagenes: extras.length ? extras : (f.imagen_url ? [f.imagen_url] : []),
       tallas: f.tallas ?? [],
       stock: f.stock ?? 0,
       destacado: !!f.destacado,
@@ -114,7 +118,8 @@ export class AdminProductos {
       nombre: p.nombre,
       descripcion: p.descripcion,
       precio_cop: p.precioCop,
-      imagen_url: p.imagenUrl,
+      imagen_url: p.imagenes[0] ?? null,
+      imagenes: p.imagenes,
       tallas: p.tallas,
       stock: p.stock,
       destacado: p.destacado,

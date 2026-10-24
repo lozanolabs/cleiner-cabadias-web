@@ -7,10 +7,12 @@ import { Idioma } from '../../../../core/i18n/idioma';
 import { CarritoStore } from '../../../carrito/services/carrito.store';
 import { Precio } from '../../../../shared/ui/precio/precio';
 import { TPipe } from '../../../../core/i18n/t.pipe';
+import { TarjetaProducto } from '../../components/tarjeta-producto/tarjeta-producto';
+
 
 @Component({
   selector: 'app-detalle-producto',
-  imports: [RouterLink, Precio, TPipe],
+  imports: [RouterLink, Precio, TPipe, TarjetaProducto],
   templateUrl: './detalle-producto.html',
   styleUrl: './detalle-producto.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -55,6 +57,32 @@ export class DetalleProducto {
   cambiarCantidad(delta: number): void {
     this.cantidad.update(c => Math.max(1, c + delta));
   }
+
+    // ── Galería ──────────────────────────────
+  readonly imagenElegida = signal<string | null>(null);
+
+  readonly imagenActiva = computed(() => {
+    const p = this.producto();
+    const elegida = this.imagenElegida();
+    if (elegida && p?.imagenes.includes(elegida)) return elegida;
+    return p?.imagenes[0] ?? 'assets/placeholder.svg';
+  });
+
+  elegirImagen(url: string): void {
+    this.imagenElegida.set(url);
+  }
+
+  // ── Relacionados ─────────────────────────
+  private readonly recursoRelacionados = resource({
+    params: () => {
+      const p = this.producto();
+      return { categoria: p?.categoriaSlug ?? '', id: p?.id ?? '', idioma: this.idioma.actual() };
+    },
+    loader: ({ params }) =>
+      params.id ? this.repo.relacionados(params.categoria, params.id, 4) : Promise.resolve([])
+  });
+
+  readonly relacionados = computed(() => this.recursoRelacionados.value() ?? []);
 
   agregar(): void {
     const p = this.producto();

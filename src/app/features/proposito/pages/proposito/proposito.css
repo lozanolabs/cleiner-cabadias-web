@@ -1,0 +1,233 @@
+:host {
+  display: block;
+  overflow-x: clip;
+  --alto-cabecera: 74px;
+  --ancho-max: 1340px;
+  --dorado: #d4a339;
+  --serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --sangrado: calc((100vw - min(100vw, var(--ancho-max))) / -2);
+}
+
+/* ═══ Portada fija ═══════════════════════════════════ */
+.portada {
+  position: sticky;
+  top: var(--alto-cabecera);
+  z-index: 0;
+  height: 72vh;
+  height: calc(100svh - var(--alto-cabecera));
+  max-height: 660px;
+  overflow: hidden;
+}
+
+.portada__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+}
+
+.portada__velo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20,15,10,.3) 0%, rgba(20,15,10,.15) 55%, rgba(20,15,10,.45) 100%);
+}
+
+.portada__titulo {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  color: #fff;
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 6vw, 4.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  text-shadow: 0 2px 24px rgba(0,0,0,.4);
+}
+
+/* ═══ Línea de tiempo ════════════════════════════════ */
+.linea {
+  position: relative;
+  z-index: 1;
+  background: var(--fondo);
+  padding-block: 3.5rem 1rem;
+}
+
+.hito {
+  display: grid;
+  grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+  align-items: center;
+  max-width: var(--ancho-max);
+  margin-inline: auto;
+  margin-bottom: 5rem;
+}
+.hito--der { grid-template-columns: minmax(0, 1fr) minmax(0, 400px); }
+.hito--der .hito__foto { order: 2; }
+
+/* ── Foto que sangra al borde ── */
+.hito__foto { margin-left: var(--sangrado); }
+.hito--der .hito__foto { margin-left: 0; margin-right: var(--sangrado); }
+
+.hito__foto img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: var(--fondo-alt);
+}
+
+/* ── Año y texto ── */
+.hito__cuerpo {
+  position: relative;
+  z-index: 2;                 /* el texto siempre por encima de la foto */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 2rem;
+  align-items: start;
+  margin-left: -72px;         /* solo el año muerde la foto de la izquierda */
+  padding-right: 2.5rem;
+}
+
+.hito--der .hito__cuerpo {
+  margin-left: 0;
+  padding-left: 2.5rem;
+  padding-right: 4rem;        /* aire entre el texto y la foto derecha */
+}
+
+.hito__marca {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: .5rem 1.6rem .7rem;
+  background: var(--fondo);
+}
+
+.hito__anio {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 5.2vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.015em;
+  color: var(--tinta);
+}
+
+.hito__raya {
+  width: 88px;
+  height: 2px;
+  background: var(--dorado);
+  margin-bottom: .95rem;
+  flex-shrink: 0;
+}
+
+.hito__detalle { padding-top: .7rem; }
+
+.hito__detalle p {
+  margin: 0 0 1rem;
+  max-width: 62ch;
+  color: var(--tinta-media);
+  line-height: 1.68;
+}
+.hito__detalle p:last-child { margin-bottom: 0; }
+.hito__detalle strong { color: var(--tinta); font-weight: 700; }
+
+/* ═══ Cifras con icono ═══════════════════════════════ */
+.cifras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.4rem;
+  list-style: none;
+  margin: 0 0 1.6rem;
+  padding: 0;
+}
+.cifras--centrada { justify-content: center; gap: 3rem; margin-bottom: 3rem; }
+
+.cifra {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .65rem;
+  text-align: center;
+  color: var(--tinta);
+}
+.cifra svg { width: 46px; height: 46px; flex-shrink: 0; }
+.cifra span {
+  max-width: 13ch;
+  font-size: .92rem;
+  line-height: 1.35;
+  color: var(--tinta-media);
+}
+
+/* ═══ Actualmente ════════════════════════════════════ */
+.actualmente {
+  position: relative;
+  z-index: 1;
+  background: var(--fondo);
+  padding: 2rem 2rem 6rem;
+  text-align: center;
+}
+
+.actualmente__titulo {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  font-weight: 700;
+  color: var(--tinta);
+}
+
+.actualmente__raya {
+  display: block;
+  width: 118px;
+  height: 2px;
+  margin: 1rem auto 3rem;
+  background: var(--dorado);
+}
+
+.actualmente__texto {
+  max-width: 64ch;
+  margin-inline: auto;
+  color: var(--tinta-media);
+  line-height: 1.75;
+}
+.actualmente__texto strong { color: var(--tinta); font-weight: 700; }
+
+/* ═══ Adaptación ═════════════════════════════════════ */
+@media (max-width: 980px) {
+  .hito,
+  .hito--der { grid-template-columns: 1fr; margin-bottom: 3.5rem; }
+  .hito--der .hito__foto { order: 0; }
+
+  .hito__foto,
+  .hito--der .hito__foto { margin-inline: 0; }
+  .hito__foto img { aspect-ratio: 16 / 10; }
+
+   .hito__cuerpo,
+  .hito--der .hito__cuerpo {
+    grid-template-columns: 1fr;
+    gap: .4rem;
+    margin: -56px 0 0;
+    padding: 0 1.25rem;
+  }
+
+  .hito__marca { align-self: start; width: fit-content; padding: .5rem 1.1rem .6rem 0; }
+  .hito__detalle { padding-top: .4rem; }
+  .hito__detalle p { max-width: none; }
+
+  .cifras { gap: 1.8rem; }
+  .actualmente { padding: 1rem 1.25rem 4rem; }
+  .cifras--centrada { gap: 2rem; }
+}
+
+@media (max-width: 560px) {
+  .portada { height: 62vh; height: calc(100svh - var(--alto-cabecera)); }
+  .cifra span { max-width: 10ch; font-size: .85rem; }
+  .cifra svg { width: 40px; height: 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portada { position: static; }
+}

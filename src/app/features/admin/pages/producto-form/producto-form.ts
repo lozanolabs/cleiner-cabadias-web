@@ -7,6 +7,9 @@ import { AdminProductos, ProductoNuevo, TextoMultiidioma } from '../../services/
 import { AdminCategorias } from '../../services/admin-categorias';
 import { IDIOMAS, CodigoIdioma } from '../../../../core/i18n/idioma';
 
+const MAX_IMAGENES = 5;
+const MAX_MB = 5;
+
 @Component({
   selector: 'app-producto-form',
   imports: [FormsModule, RouterLink],
@@ -21,6 +24,7 @@ export class ProductoForm {
   private readonly repoCategorias = inject(AdminCategorias);
 
   readonly idiomas = IDIOMAS;
+  readonly maxImagenes = MAX_IMAGENES;
 
   readonly id = toSignal(this.ruta.paramMap.pipe(map(p => p.get('id'))), { initialValue: null });
   readonly editando = computed(() => !!this.id());
@@ -31,7 +35,7 @@ export class ProductoForm {
   readonly nombre = signal<TextoMultiidioma>({});
   readonly descripcion = signal<TextoMultiidioma>({});
   readonly precioCop = signal<number | null>(null);
-  readonly imagenUrl = signal<string | null>(null);
+  readonly imagenes = signal<string[]>([]);
   readonly tallasTexto = signal('');
   readonly stock = signal(0);
   readonly destacado = signal(false);
@@ -56,7 +60,7 @@ export class ProductoForm {
         this.nombre.set({ ...p.nombre });
         this.descripcion.set({ ...p.descripcion });
         this.precioCop.set(p.precioCop);
-        this.imagenUrl.set(p.imagenUrl);
+        this.imagenes.set(p.imagenes);
         this.tallasTexto.set(p.tallas.join(', '));
         this.stock.set(p.stock);
         this.destacado.set(p.destacado);
@@ -68,22 +72,26 @@ export class ProductoForm {
 
   readonly cargando = computed(() => this.recursoProducto.isLoading());
 
-  /** Idiomas que todavía no tienen el nombre traducido. */
   readonly faltantes = computed(() =>
     this.idiomas.filter(i => !this.nombre()[i.codigo]?.trim()).map(i => i.nombre)
+  );
+
+  private readonly tallasLista = computed(() =>
+    this.tallasTexto().split(',').map(t => t.trim()).filter(Boolean)
   );
 
   readonly puedeGuardar = computed(() =>
     !!this.categoriaId() &&
     !!this.slug().trim() &&
     !!this.nombre()['es']?.trim() &&
-    (this.precioCop() ?? 0) > 0
+    (this.precioCop() ?? 0) > 0 &&
+    this.tallasLista().length > 0
   );
 
   // ── Acciones ────────────────────────────
   fijarTexto(campo: 'nombre' | 'descripcion', idioma: CodigoIdioma, valor: string): void {
-    const signalDestino = campo === 'nombre' ? this.nombre : this.descripcion;
-    signalDestino.update(actual => ({ ...actual, [idioma]: valor }));
+    const destino = campo === 'nombre' ? this.nombre : this.descripcion;
+    destino.update(actual => ({ ...actual, [idioma]: valor }));
   }
 
   generarSlug(): void {
@@ -96,25 +104,43 @@ export class ProductoForm {
     if (base) this.slug.set(base);
   }
 
-  async subirImagen(evento: Event): Promise<void> {
-    const archivo = (evento.target as HTMLInputElement).files?.[0];
-    if (!archivo) return;
+  async subirImagenes(evento: Event): Promise<void> {
+    const input = evento.target as HTMLInputElement;
+    const archivos = Array.from(input.files ?? []);
+    if (!archivos.length) return;
 
-    if (archivo.size > 5 * 1024 * 1024) {
-      this.error.set('La imagen supera los 5 MB. Comprímela antes de subirla.');
+    if (this.imagenes().length + archivos.length > MAX_IMAGENES) {
+      this.error.set(`Máximo ${MAX_IMAGENES} imágenes por producto.`);
+      input.value = '';
       return;
     }
 
     this.error.set('');
     this.subiendo.set(true);
+
     try {
-      const url = await this.repo.subirImagen(archivo, this.slug() || 'producto');
-      this.imagenUrl.set(url);
+      for (const archivo of archivos) {
+        if (archivo.size > MAX_MB * 1024 * 1024) {
+          this.error.set(`"${archivo.name}" supera los ${MAX_MB} MB y no se subió.`);
+          continue;
+        }
+        const url = await this.repo.subirImagen(archivo, this.slug() || 'producto');
+        this.imagenes.update(lista => [...lista, url]);
+      }
     } catch (e) {
       this.error.set((e as Error).message);
     } finally {
       this.subiendo.set(false);
+      input.value = '';
     }
+  }
+
+  quitarImagen(url: string): void {
+    this.imagenes.update(lista => lista.filter(u => u !== url));
+  }
+
+  hacerPrincipal(url: string): void {
+    this.imagenes.update(lista => [url, ...lista.filter(u => u !== url)]);
   }
 
   async guardar(): Promise<void> {
@@ -129,8 +155,9 @@ export class ProductoForm {
       nombre: this.limpiar(this.nombre()),
       descripcion: this.limpiar(this.descripcion()),
       precioCop: Math.round(this.precioCop() ?? 0),
-      imagenUrl: this.imagenUrl(),
-      tallas: this.tallasTexto().split(',').map(t => t.trim()).filter(Boolean),
+      imagenUrl: this.imagenes()[0] ?? null,
+      imagenes: this.imagenes(),
+      tallas: this.tallasLista(),
       stock: Math.max(0, Math.round(this.stock())),
       destacado: this.destacado(),
       activo: this.activo()

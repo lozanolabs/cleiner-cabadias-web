@@ -1,8 +1,39 @@
-<a class="tarjeta" [routerLink]="['/tienda/producto', producto().slug]">
-  <div class="tarjeta__imagen">
-    <img [src]="producto().imagenUrl || 'assets/placeholder.svg'"
-         [alt]="producto().nombre" loading="lazy" width="400" height="533">
+<article class="tarjeta">
+  <a class="tarjeta__enlace" [routerLink]="['/tienda/producto', producto().slug]">
+    <div class="tarjeta__imagen">
+      <img [src]="producto().imagenUrl || 'assets/placeholder.svg'"
+           [alt]="producto().nombre" loading="lazy" width="400" height="533">
+    </div>
+
+    <h3 class="tarjeta__nombre">{{ producto().nombre }}</h3>
+
+    @if (producto().categoriaNombre) {
+      <span class="tarjeta__categoria">{{ producto().categoriaNombre }}</span>
+    }
+
+    <app-precio class="tarjeta__precio" [cop]="producto().precio" />
+  </a>
+
+  <div class="tarjeta__accion">
+    @if (necesitaTalla()) {
+      <fieldset class="tallas">
+        <legend>{{ 'producto.talla' | t }}</legend>
+        @for (t of tallas(); track t) {
+          <button type="button" class="chip"
+                  [class.chip--activo]="tallaElegida() === t"
+                  [attr.aria-pressed]="tallaElegida() === t"
+                  (click)="elegirTalla(t)">{{ t }}</button>
+        }
+      </fieldset>
+    }
+
+    <button type="button" class="tarjeta__boton"
+            [class.tarjeta__boton--ok]="agregado()"
+            [disabled]="!puedeAgregar()"
+            (click)="agregar()">
+      {{ (agregado() ? 'producto.agregado'
+                     : puedeAgregar() ? 'producto.agregar'
+                     : 'producto.elijaTalla') | t }}
+    </button>
   </div>
-  <h3 class="tarjeta__nombre">{{ producto().nombre }}</h3>
-  <app-precio [cop]="producto().precio" />
-</a>
+</article>

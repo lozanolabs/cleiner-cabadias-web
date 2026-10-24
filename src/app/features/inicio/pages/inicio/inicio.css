@@ -5,15 +5,20 @@
   max-height: 780px;
 }
 
+.portada { max-height: 640px; }
+
 .portada__video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* el original es vertical y de baja resolución: el desenfoque leve
-     disimula el escalado sin que se note como defecto */
+  object-position: center 22%;
   filter: saturate(1.05);
+}
+
+@media (max-width: 820px) {
+  .portada__video { object-position: center 18%; }
 }
 
 .portada__velo {

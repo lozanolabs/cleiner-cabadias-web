@@ -12,15 +12,29 @@
   <article class="detalle">
 
     <div class="detalle__galeria">
-      <img [src]="p.imagenUrl || 'assets/placeholder.svg'" [alt]="p.nombre"
-           width="800" height="1000">
+      <div class="galeria__principal">
+        <img [src]="imagenActiva()" [alt]="p.nombre" width="800" height="1000">
+      </div>
+
+      @if (p.imagenes.length > 1) {
+        <div class="galeria__miniaturas">
+          @for (img of p.imagenes; track img) {
+            <button type="button" class="miniatura"
+                    [class.miniatura--activa]="img === imagenActiva()"
+                    [attr.aria-label]="'producto.verImagen' | t"
+                    (click)="elegirImagen(img)">
+              <img [src]="img" alt="" loading="lazy">
+            </button>
+          }
+        </div>
+      }
     </div>
 
     <div class="detalle__info">
       <nav class="miga">
         <a routerLink="/tienda">{{ 'menu.tienda' | t }}</a>
         <span aria-hidden="true">/</span>
-        <a [routerLink]="['/tienda', p.categoriaSlug]">{{ p.categoriaSlug }}</a>
+        <a [routerLink]="['/tienda', p.categoriaSlug]">{{ p.categoriaNombre || p.categoriaSlug }}</a>
       </nav>
 
       <h1 class="detalle__nombre">{{ p.nombre }}</h1>
@@ -66,5 +80,17 @@
         </p>
       }
     </div>
+
   </article>
+
+  @if (relacionados().length) {
+    <section class="relacionados">
+      <h2>{{ 'producto.relacionados' | t }}</h2>
+      <div class="relacionados__rejilla">
+        @for (r of relacionados(); track r.id) {
+          <app-tarjeta-producto [producto]="r" />
+        }
+      </div>
+    </section>
+  }
 }

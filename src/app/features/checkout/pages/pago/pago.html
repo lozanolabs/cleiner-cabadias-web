@@ -1,1 +1,188 @@
 <p>pago works!</p>
+<section class="pago contenedor">
+  <h1 class="pago__titulo">{{ 'checkout.titulo' | t }}</h1>
+
+  <form class="pago__cuerpo" (ngSubmit)="pagar()">
+
+    <div class="pago__campos">
+
+      <!-- ── Contacto ── -->
+      <fieldset class="grupo">
+        <legend>{{ 'checkout.contacto' | t }}</legend>
+
+        <label class="campo campo--ancho">
+          <span>{{ 'checkout.email' | t }} *</span>
+          <input type="email" name="email" autocomplete="email" required
+                 [ngModel]="datos().email" (ngModelChange)="fijar('email', $event)">
+          <small>{{ 'checkout.emailNota' | t }}</small>
+        </label>
+      </fieldset>
+
+      <!-- ── Facturación ── -->
+      <fieldset class="grupo">
+        <legend>{{ 'checkout.facturacion' | t }}</legend>
+
+        <label class="campo">
+          <span>{{ 'checkout.tipoPersona' | t }} *</span>
+          <select name="tipoPersona"
+                  [ngModel]="datos().tipoPersona" (ngModelChange)="fijar('tipoPersona', $event)">
+            <option value="natural">{{ 'checkout.natural' | t }}</option>
+            <option value="juridica">{{ 'checkout.juridica' | t }}</option>
+          </select>
+        </label>
+
+        <label class="campo">
+          <span>{{ 'checkout.tipoDocumento' | t }} *</span>
+          <select name="tipoDocumento"
+                  [ngModel]="datos().tipoDocumento" (ngModelChange)="fijar('tipoDocumento', $event)">
+            @if (esJuridica()) {
+              <option value="NIT">NIT</option>
+            } @else {
+              <option value="CC">{{ 'checkout.cc' | t }}</option>
+              <option value="CE">{{ 'checkout.ce' | t }}</option>
+              <option value="PAS">{{ 'checkout.pasaporte' | t }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="campo">
+          <span>{{ 'checkout.numeroDocumento' | t }} *</span>
+          <input type="text" name="documento" inputmode="numeric" required
+                 [ngModel]="datos().numeroDocumento"
+                 (ngModelChange)="fijar('numeroDocumento', $event)">
+        </label>
+
+        <label class="campo">
+          <span>{{ (esJuridica() ? 'checkout.razonSocial' : 'checkout.nombre') | t }} *</span>
+          <input type="text" name="nombre" autocomplete="name" required
+                 [ngModel]="datos().nombre" (ngModelChange)="fijar('nombre', $event)">
+        </label>
+      </fieldset>
+
+      <!-- ── Envío ── -->
+      <fieldset class="grupo">
+        <legend>{{ 'checkout.direccion' | t }}</legend>
+
+        <label class="campo">
+          <span>{{ 'checkout.pais' | t }} *</span>
+          <select name="pais" [ngModel]="datos().pais" (ngModelChange)="fijar('pais', $event)">
+            <option value="CO">Colombia</option>
+          </select>
+          <small>{{ 'checkout.soloColombia' | t }}</small>
+        </label>
+
+        <label class="campo">
+          <span>{{ 'checkout.departamento' | t }} *</span>
+          <select name="departamento" required
+                  [ngModel]="datos().departamento" (ngModelChange)="fijar('departamento', $event)">
+            <option value="">{{ 'checkout.selecciona' | t }}</option>
+            @for (d of departamentos; track d) {
+              <option [value]="d">{{ d }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="campo">
+          <span>{{ 'checkout.ciudad' | t }} *</span>
+          <input type="text" name="ciudad" autocomplete="address-level2" required
+                 [ngModel]="datos().ciudad" (ngModelChange)="fijar('ciudad', $event)">
+        </label>
+
+        <label class="campo campo--ancho">
+          <span>{{ 'checkout.calle' | t }} *</span>
+          <input type="text" name="direccion" autocomplete="street-address" required
+                 [ngModel]="datos().direccion" (ngModelChange)="fijar('direccion', $event)">
+        </label>
+
+        <label class="campo campo--ancho">
+          <span>{{ 'checkout.detalle' | t }}</span>
+          <input type="text" name="detalle"
+                 [ngModel]="datos().detalle" (ngModelChange)="fijar('detalle', $event)">
+        </label>
+
+        <label class="campo">
+          <span>{{ 'checkout.telefono' | t }} *</span>
+          <input type="tel" name="telefono" autocomplete="tel" required
+                 [ngModel]="datos().telefono" (ngModelChange)="fijar('telefono', $event)">
+        </label>
+      </fieldset>
+
+      <!-- ── Aceptaciones ── -->
+      <fieldset class="grupo">
+        <legend>{{ 'checkout.antesDePagar' | t }}</legend>
+
+        <label class="casilla campo--ancho">
+          <input type="checkbox" name="terminos"
+                 [ngModel]="datos().aceptaTerminos"
+                 (ngModelChange)="fijar('aceptaTerminos', $event)">
+          <span>
+            {{ 'checkout.aceptoTerminos' | t }}
+            <a routerLink="/terminos" target="_blank">{{ 'pie.terminos' | t }}</a>
+          </span>
+        </label>
+
+        <label class="casilla campo--ancho">
+          <input type="checkbox" name="datosPersonales"
+                 [ngModel]="datos().aceptaDatos"
+                 (ngModelChange)="fijar('aceptaDatos', $event)">
+          <span>
+            {{ 'checkout.aceptoDatos' | t }}
+            <a routerLink="/privacidad" target="_blank">{{ 'pie.privacidad' | t }}</a>
+          </span>
+        </label>
+      </fieldset>
+
+      @if (error()) {
+        <p class="aviso aviso--mal" role="alert">{{ error() }}</p>
+      }
+    </div>
+
+    <!-- ── Resumen ── -->
+    <aside class="resumen">
+      <h2>{{ 'carrito.resumen' | t }}</h2>
+
+      <ul class="resumen__items">
+        @for (i of carrito.items(); track i.productoId + (i.talla ?? '')) {
+          <li>
+            <span class="resumen__cant">{{ i.cantidad }}</span>
+            <img [src]="i.imagenUrl || 'assets/placeholder.svg'" [alt]="" width="46" height="58">
+            <div class="resumen__info">
+              <strong>{{ i.nombre }}</strong>
+              @if (i.talla) { <span>{{ 'producto.talla' | t }} {{ i.talla }}</span> }
+            </div>
+            <app-precio [cop]="i.precio * i.cantidad" />
+          </li>
+        }
+      </ul>
+
+      <div class="resumen__linea">
+        <span>{{ 'carrito.subtotal' | t }}</span>
+        <app-precio [cop]="subtotal()" />
+      </div>
+
+      <div class="resumen__linea">
+        <span>{{ 'carrito.envio' | t }}</span>
+        @if (envio() > 0) {
+          <app-precio [cop]="envio()" />
+        } @else {
+          <span class="gratis">{{ 'checkout.envioGratis' | t }}</span>
+        }
+      </div>
+
+      <div class="resumen__linea resumen__linea--total">
+        <span>{{ 'checkout.total' | t }}</span>
+        <app-precio [cop]="total()" />
+      </div>
+
+      <button type="submit" class="btn-pagar"
+              [disabled]="!puedePagar() || enviando()">
+        {{ (enviando() ? 'checkout.procesando' : 'checkout.pagar') | t }}
+      </button>
+
+      <p class="resumen__nota">{{ 'checkout.cobroEnPesos' | t }}</p>
+
+      <a class="resumen__volver" routerLink="/carrito">{{ 'checkout.volverCarrito' | t }}</a>
+    </aside>
+
+  </form>
+</section>
