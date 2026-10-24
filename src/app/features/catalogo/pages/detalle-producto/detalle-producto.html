@@ -45,7 +45,7 @@
         <p class="detalle__descripcion">{{ p.descripcion }}</p>
       }
 
-      @if (p.tallas?.length) {
+      @if (!agotado() && p.tallas?.length) {
         <fieldset class="tallas">
           <legend>{{ 'producto.talla' | t }}</legend>
           @for (t of p.tallas; track t) {
@@ -58,19 +58,30 @@
         </fieldset>
       }
 
-      <div class="cantidad">
-        <button type="button" (click)="cambiarCantidad(-1)"
-                [disabled]="cantidad() === 1"
-                [attr.aria-label]="'producto.quitarUno' | t">−</button>
-        <span aria-live="polite">{{ cantidad() }}</span>
-        <button type="button" (click)="cambiarCantidad(1)"
-                [attr.aria-label]="'producto.sumarUno' | t">+</button>
-      </div>
+      @if (!agotado()) {
+        <div class="cantidad">
+          <button type="button" (click)="cambiarCantidad(-1)"
+                  [disabled]="cantidad() === 1"
+                  [attr.aria-label]="'producto.quitarUno' | t">−</button>
+          <span aria-live="polite">{{ cantidad() }}</span>
+          <button type="button" (click)="cambiarCantidad(1)"
+                  [disabled]="cantidad() >= p.stock"
+                  [attr.aria-label]="'producto.sumarUno' | t">+</button>
+        </div>
+      }
+
+      @if (agotado()) {
+        <p class="aviso aviso--agotado" role="status">{{ 'producto.agotadoNota' | t }}</p>
+      } @else if (p.stock <= 3) {
+        <p class="aviso aviso--pocas">{{ 'producto.pocasUnidades' | t }} {{ p.stock }}</p>
+      }
 
       <button type="button" class="agregar"
               [disabled]="!puedeAgregar()"
               (click)="agregar()">
-        {{ (puedeAgregar() ? 'producto.agregar' : 'producto.elijaTalla') | t }}
+        {{ (agotado() ? 'producto.agotado'
+                      : puedeAgregar() ? 'producto.agregar'
+                      : 'producto.elijaTalla') | t }}
       </button>
 
       @if (agregado()) {

@@ -4,24 +4,45 @@
   gap: 4rem;
   max-width: 1280px;
   margin-inline: auto;
-  padding: 3rem 2rem 6rem;
+  padding: 3rem 2rem 4rem;
 }
 
 /* ── Galería ─────────────────────────────── */
-.detalle__galeria {
-  position: sticky;
-  top: 6rem;
-  align-self: start;
+.detalle__galeria { align-self: start; }
+
+.galeria__principal {
   border-radius: var(--radio);
   overflow: hidden;
   background: var(--fondo-alt);
 }
-.detalle__galeria img {
+.galeria__principal img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
 }
+
+.galeria__miniaturas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .6rem;
+  margin-top: .6rem;
+}
+
+.miniatura {
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--fondo-alt);
+  cursor: pointer;
+  line-height: 0;
+  opacity: .65;
+  transition: border-color var(--transicion), opacity var(--transicion);
+}
+.miniatura:hover { opacity: 1; }
+.miniatura--activa { border-color: var(--naranja); opacity: 1; }
+.miniatura img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
 
 /* ── Información ─────────────────────────── */
 .detalle__info { padding-top: .5rem; }
@@ -52,6 +73,7 @@ app-precio { font-size: 1.35rem; }
   margin: 1.6rem 0 2.2rem;
   color: var(--tinta-media);
   max-width: 48ch;
+  line-height: 1.68;
 }
 
 /* ── Tallas ──────────────────────────────── */
@@ -101,7 +123,7 @@ app-precio { font-size: 1.35rem; }
   border: 1px solid var(--linea);
   border-radius: var(--radio-pastilla);
   padding: .2rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
 }
 .cantidad button {
   width: 34px;
@@ -144,11 +166,12 @@ app-precio { font-size: 1.35rem; }
   cursor: not-allowed;
 }
 
+/* ── Avisos ──────────────────────────────── */
 .aviso {
   display: flex;
   align-items: center;
   gap: .6rem;
-  margin-top: 1.1rem;
+  margin: 0 0 1.1rem;
   padding: .8rem 1.1rem;
   background: var(--naranja-suave);
   border-radius: var(--radio);
@@ -157,6 +180,9 @@ app-precio { font-size: 1.35rem; }
   max-width: 400px;
 }
 .aviso a { color: inherit; font-weight: 700; }
+
+.aviso--agotado { background: var(--fondo-alt); color: var(--tinta-media); }
+.aviso--pocas { background: var(--naranja-suave); color: var(--naranja-fin); }
 
 /* ── Estados ─────────────────────────────── */
 .detalle--esqueleto { pointer-events: none; }
@@ -176,9 +202,28 @@ button:focus-visible {
   outline-offset: 3px;
 }
 
-/* ── Móvil ───────────────────────────────── */
+/* ── Relacionados ────────────────────────── */
+.relacionados {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem 5rem;
+}
+.relacionados h2 {
+  margin: 0 0 1.8rem;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+.relacionados__rejilla {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+/* ── Adaptación ──────────────────────────── */
 @media (max-width: 900px) {
-  .detalle { grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem 1.15rem 4rem; }
-  .detalle__galeria { position: static; }
-  .agregar { max-width: none; }
+  .detalle { grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem 1.15rem 3rem; }
+  .agregar, .aviso { max-width: none; }
+  .relacionados { padding-inline: 1.15rem; }
+  .relacionados__rejilla { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
 }

@@ -26,6 +26,7 @@
 }
 
 .tarjeta__imagen {
+  position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
   overflow: hidden;
@@ -39,6 +40,20 @@
   transition: transform 450ms cubic-bezier(.22, 1, .36, 1);
 }
 .tarjeta:hover .tarjeta__imagen img { transform: scale(1.045); }
+
+.tarjeta__agotado {
+  position: absolute;
+  top: .75rem;
+  left: .75rem;
+  padding: .3rem .75rem;
+  background: rgba(42, 37, 33, .88);
+  border-radius: 999px;
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
 
 .tarjeta__nombre {
   margin: 0;

@@ -108,6 +108,9 @@ export const TEXTOS = {
   'checkout.procesando':      { es: 'Procesando…', en: 'Processing…', fr: 'Traitement…', it: 'Elaborazione…', pt: 'A processar…' },
   'checkout.cobroEnPesos':    { es: 'El cobro se realiza en pesos colombianos. Los valores en otras monedas son de referencia.', en: 'You will be charged in Colombian pesos. Amounts in other currencies are for reference only.', fr: 'Le paiement est effectué en pesos colombiens. Les montants dans d\'autres devises sont indicatifs.', it: 'L\'addebito avviene in pesos colombiani. Gli importi in altre valute sono indicativi.', pt: 'A cobrança é feita em pesos colombianos. Os valores noutras moedas são de referência.' },
   'checkout.volverCarrito':   { es: 'Volver al carrito', en: 'Back to cart', fr: 'Retour au panier', it: 'Torna al carrello', pt: 'Voltar ao carrinho' },
+    'producto.agotado':       { es: 'Agotado', en: 'Sold out', fr: 'Épuisé', it: 'Esaurito', pt: 'Esgotado' },
+  'producto.agotadoNota':   { es: 'Esta pieza está agotada por ahora. Escríbenos si quieres encargarla.', en: 'This piece is sold out for now. Message us if you would like to order it.', fr: 'Cette pièce est épuisée pour le moment. Écrivez-nous si vous souhaitez la commander.', it: 'Questo capo è esaurito per ora. Scrivici se desideri ordinarlo.', pt: 'Esta peça está esgotada por agora. Escreva-nos se quiser encomendá-la.' },
+  'producto.pocasUnidades': { es: 'Quedan pocas unidades:', en: 'Only a few left:', fr: 'Il n\'en reste que quelques-unes :', it: 'Ne restano poche:', pt: 'Restam poucas unidades:' },
 } as const satisfies Record<string, Traduccion>;
 
 export type ClaveTexto = keyof typeof TEXTOS;

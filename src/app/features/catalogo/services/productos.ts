@@ -4,7 +4,7 @@ import { Idioma, IDIOMA_POR_DEFECTO } from '../../../core/i18n/idioma';
 import { Producto } from '../models/producto.model';
 
 const CAMPOS = `
-  id, slug, precio_cop, imagen_url, imagenes, tallas, nombre, descripcion,
+  id, slug, precio_cop, imagen_url, imagenes, tallas, stock, nombre, descripcion,
   categorias!inner(slug, nombre)
 `;
 
@@ -90,6 +90,7 @@ export class Productos {
       imagenUrl: principal,
       imagenes: galeria,
       tallas: f.tallas ?? [],
+      stock: f.stock ?? 0,
       categoriaSlug: f.categorias?.slug ?? '',
       categoriaNombre: f.categorias?.nombre?.[l] ?? f.categorias?.nombre?.[IDIOMA_POR_DEFECTO] ?? ''
     };

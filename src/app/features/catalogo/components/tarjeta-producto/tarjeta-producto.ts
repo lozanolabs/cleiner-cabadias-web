@@ -25,9 +25,10 @@ export class TarjetaProducto implements OnDestroy {
 
   readonly tallas = computed(() => this.producto().tallas ?? []);
   readonly necesitaTalla = computed(() => this.tallas().length > 0);
+  readonly agotado = computed(() => this.producto().stock <= 0);
 
   readonly puedeAgregar = computed(() =>
-    !this.necesitaTalla() || !!this.tallaElegida()
+    !this.agotado() && (!this.necesitaTalla() || !!this.tallaElegida())
   );
 
   private temporizador?: ReturnType<typeof setTimeout>;
