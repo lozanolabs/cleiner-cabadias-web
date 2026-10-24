@@ -48,7 +48,7 @@ const VACIO: Datos = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Pago {
-  private readonly checkout = inject(Checkout);
+  readonly checkout = inject(Checkout);
   private readonly conversion = inject(Conversion);
   private readonly idioma = inject(Idioma);
 
