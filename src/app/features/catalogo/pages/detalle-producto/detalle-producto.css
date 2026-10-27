@@ -1,4 +1,73 @@
-/* ── Precio ──────────────────────────────── */
+.detalle {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 4rem;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: 3rem 2rem 4rem;
+}
+
+/* ── Galería ─────────────────────────────── */
+.detalle__galeria { align-self: start; }
+
+.galeria__principal {
+  border-radius: var(--radio);
+  overflow: hidden;
+  background: var(--fondo-alt);
+}
+.galeria__principal img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.galeria__miniaturas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .6rem;
+  margin-top: .6rem;
+}
+
+.miniatura {
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--fondo-alt);
+  cursor: pointer;
+  line-height: 0;
+  opacity: .65;
+  transition: border-color var(--transicion), opacity var(--transicion);
+}
+.miniatura:hover { opacity: 1; }
+.miniatura--activa { border-color: var(--naranja); opacity: 1; }
+.miniatura img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+
+/* ── Información ─────────────────────────── */
+.detalle__info { padding-top: .5rem; }
+
+.miga {
+  display: flex;
+  gap: .5rem;
+  font-size: .8rem;
+  color: var(--tinta-tenue);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 1.2rem;
+}
+.miga a { color: inherit; text-decoration: none; }
+.miga a:hover { color: var(--naranja-fin); }
+
+.detalle__nombre {
+  margin: 0 0 .9rem;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+}
+
+/* ── Precio, con "desde" cuando varía por talla ── */
 .detalle__precio {
   display: inline-flex;
   align-items: baseline;
@@ -13,6 +82,13 @@
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--tinta-tenue);
+}
+
+.detalle__descripcion {
+  margin: 1.6rem 0 2.2rem;
+  color: var(--tinta-media);
+  max-width: 48ch;
+  line-height: 1.68;
 }
 
 /* ── Tallas ──────────────────────────────── */
@@ -76,3 +152,116 @@
   text-decoration-thickness: 1px;
 }
 .tallas__opcion.agotada .tallas__precio { color: var(--tinta-tenue); }
+
+/* ── Cantidad ────────────────────────────── */
+.cantidad {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-pastilla);
+  padding: .2rem;
+  margin-bottom: 1.2rem;
+}
+.cantidad button {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--tinta);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--transicion);
+}
+.cantidad button:hover:not(:disabled) { background: var(--fondo-alt); }
+.cantidad button:disabled { color: var(--tinta-tenue); cursor: not-allowed; }
+.cantidad span { min-width: 30px; text-align: center; font-weight: 600; }
+
+/* ── Agregar ─────────────────────────────── */
+.agregar {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, var(--naranja-ini), var(--naranja-fin));
+  border: 0;
+  border-radius: var(--radio-pastilla);
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  cursor: pointer;
+  transition: filter var(--transicion), transform var(--transicion);
+}
+.agregar:hover:not(:disabled) { filter: brightness(1.06); }
+.agregar:active:not(:disabled) { transform: translateY(1px); }
+.agregar:disabled {
+  background: var(--linea);
+  color: var(--tinta-tenue);
+  cursor: not-allowed;
+}
+
+/* ── Avisos ──────────────────────────────── */
+.aviso {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin: 0 0 1.1rem;
+  padding: .8rem 1.1rem;
+  background: var(--naranja-suave);
+  border-radius: var(--radio);
+  font-size: .9rem;
+  color: var(--naranja-fin);
+  max-width: 400px;
+}
+.aviso a { color: inherit; font-weight: 700; }
+
+.aviso--agotado { background: var(--fondo-alt); color: var(--tinta-media); }
+.aviso--pocas { background: var(--naranja-suave); color: var(--naranja-fin); }
+
+/* ── Estados ─────────────────────────────── */
+.detalle--esqueleto { pointer-events: none; }
+.esqueleto--imagen { aspect-ratio: 4/5; border-radius: var(--radio); background: var(--fondo-alt); }
+.esqueleto--texto  { height: 320px; border-radius: var(--radio); background: var(--fondo-alt); }
+
+.detalle__vacio {
+  max-width: 620px;
+  margin-inline: auto;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+.detalle__vacio a { color: var(--naranja); font-weight: 600; }
+
+button:focus-visible {
+  outline: 2px solid var(--naranja);
+  outline-offset: 3px;
+}
+
+/* ── Relacionados ────────────────────────── */
+.relacionados {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem 5rem;
+}
+.relacionados h2 {
+  margin: 0 0 1.8rem;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+.relacionados__rejilla {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
+}
+
+/* ── Adaptación ──────────────────────────── */
+@media (max-width: 900px) {
+  .detalle { grid-template-columns: 1fr; gap: 2rem; padding: 1.5rem 1.15rem 3rem; }
+  .agregar, .aviso { max-width: none; }
+  .relacionados { padding-inline: 1.15rem; }
+  .relacionados__rejilla { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+}
