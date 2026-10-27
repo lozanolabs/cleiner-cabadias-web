@@ -1,0 +1,79 @@
+.medidas { margin: 2rem 0 0; }
+
+.medidas__titulo {
+  margin: 0 0 .9rem;
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--tinta-media);
+}
+
+/* En móvil la tabla se desplaza en lugar de romper el diseño. */
+.medidas__marco {
+  overflow-x: auto;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  -webkit-overflow-scrolling: touch;
+}
+
+.medidas__tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+  white-space: nowrap;
+}
+
+.medidas__tabla th,
+.medidas__tabla td {
+  padding: .65rem .9rem;
+  text-align: center;
+  border-bottom: 1px solid var(--linea);
+}
+
+.medidas__tabla tbody tr:last-child th,
+.medidas__tabla tbody tr:last-child td { border-bottom: 0; }
+
+/* Primera columna: el nombre de la medida, anclado al desplazarse. */
+.medidas__tabla th[scope="row"],
+.medidas__esquina {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--fondo);
+  text-align: left;
+  font-weight: 600;
+  color: var(--tinta);
+}
+
+.medidas__tabla thead th {
+  background: var(--fondo-alt);
+  font-weight: 700;
+  color: var(--tinta);
+}
+.medidas__esquina {
+  background: var(--fondo-alt);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--tinta-tenue);
+}
+
+.medidas__tabla td { color: var(--tinta-media); }
+
+/* Columna de la talla elegida */
+.medidas__tabla thead th.elegida {
+  background: linear-gradient(90deg, var(--naranja-ini), var(--naranja-fin));
+  color: #fff;
+}
+.medidas__tabla td.elegida {
+  background: var(--naranja-suave);
+  color: var(--naranja-fin);
+  font-weight: 700;
+}
+
+.medidas__nota {
+  margin: .7rem 0 0;
+  font-size: .82rem;
+  color: var(--tinta-tenue);
+}

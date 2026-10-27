@@ -39,41 +39,53 @@
 
       <h1 class="detalle__nombre">{{ p.nombre }}</h1>
 
-      <app-precio [cop]="p.precio" />
+      <p class="detalle__precio">
+        @if (mostrarDesde()) {
+          <span class="detalle__desde">{{ 'producto.desde' | t }}</span>
+        }
+        <app-precio [cop]="precioMostrado()" />
+      </p>
 
       @if (p.descripcion) {
         <p class="detalle__descripcion">{{ p.descripcion }}</p>
       }
 
-      @if (!agotado() && p.tallas?.length) {
+      @if (!agotado() && mostrarTallas()) {
         <fieldset class="tallas">
           <legend>{{ 'producto.talla' | t }}</legend>
-          @for (t of p.tallas; track t) {
+          @for (t of p.tallas; track t.talla) {
             <button type="button"
                     class="tallas__opcion"
-                    [class.elegida]="tallaElegida() === t"
-                    [attr.aria-pressed]="tallaElegida() === t"
-                    (click)="elegirTalla(t)">{{ t }}</button>
+                    [class.elegida]="tallaElegida()?.talla === t.talla"
+                    [class.agotada]="t.stock <= 0"
+                    [disabled]="t.stock <= 0"
+                    [attr.aria-pressed]="tallaElegida()?.talla === t.talla"
+                    (click)="elegirTalla(t)">
+              <span class="tallas__letra">{{ t.talla }}</span>
+              @if (mostrarPrecioEnTalla()) {
+                <app-precio class="tallas__precio" [cop]="t.precio" />
+              }
+            </button>
           }
         </fieldset>
       }
 
-      @if (!agotado()) {
+      @if (!agotado() && puedeAgregar()) {
         <div class="cantidad">
           <button type="button" (click)="cambiarCantidad(-1)"
                   [disabled]="cantidad() === 1"
                   [attr.aria-label]="'producto.quitarUno' | t">−</button>
           <span aria-live="polite">{{ cantidad() }}</span>
           <button type="button" (click)="cambiarCantidad(1)"
-                  [disabled]="cantidad() >= p.stock"
+                  [disabled]="cantidad() >= maximo()"
                   [attr.aria-label]="'producto.sumarUno' | t">+</button>
         </div>
       }
 
       @if (agotado()) {
         <p class="aviso aviso--agotado" role="status">{{ 'producto.agotadoNota' | t }}</p>
-      } @else if (p.stock <= 3) {
-        <p class="aviso aviso--pocas">{{ 'producto.pocasUnidades' | t }} {{ p.stock }}</p>
+      } @else if (pocasUnidades(); as quedan) {
+        <p class="aviso aviso--pocas">{{ 'producto.pocasUnidades' | t }} {{ quedan }}</p>
       }
 
       <button type="button" class="agregar"
@@ -90,6 +102,10 @@
           <a routerLink="/carrito">{{ 'carrito.ver' | t }}</a>
         </p>
       }
+
+      <app-tabla-medidas
+        [tallas]="nombresTallas()"
+        [seleccionada]="nombreTallaElegida()" />
     </div>
 
   </article>

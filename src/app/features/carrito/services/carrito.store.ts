@@ -1,7 +1,7 @@
 import { Injectable, computed, effect, inject, signal, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ItemCarrito } from '../models/item-carrito.model';
-import { Producto } from '../../catalogo/models/producto.model';
+import { Producto, TallaProducto } from '../../catalogo/models/producto.model';
 
 const CLAVE = 'cc_carrito_v1';
 
@@ -33,9 +33,19 @@ export class CarritoStore {
     });
   }
 
-  agregar(producto: Producto, cantidad = 1, talla?: string): void {
+  /**
+   * El precio ya no vive en el producto sino en la talla, así que la talla
+   * es obligatoria. El tope de stock se aplica aquí porque en este momento
+   * el dato viene recién leído de la base; el carrito guardado en el
+   * navegador no se revalida, de eso se encarga el servidor al pagar.
+   */
+  agregar(producto: Producto, talla: TallaProducto, cantidad = 1): void {
+    if (talla.stock <= 0) return;
+
     this._items.update(items => {
-      const idx = items.findIndex(i => i.productoId === producto.id && i.talla === talla);
+      const idx = items.findIndex(
+        i => i.productoId === producto.id && i.talla === talla.talla
+      );
 
       if (idx === -1) {
         return [...items, {
@@ -43,14 +53,17 @@ export class CarritoStore {
           slug: producto.slug,
           nombre: producto.nombre,
           imagenUrl: producto.imagenUrl,
-          precio: producto.precio,
-          cantidad,
-          talla
+          precio: talla.precio,
+          cantidad: Math.min(cantidad, talla.stock),
+          talla: talla.talla
         }];
       }
 
       return items.map((item, i) =>
-        i === idx ? { ...item, cantidad: item.cantidad + cantidad } : item
+        i === idx
+          ? { ...item, precio: talla.precio,
+              cantidad: Math.min(item.cantidad + cantidad, talla.stock) }
+          : item
       );
     });
   }

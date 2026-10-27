@@ -1,0 +1,32 @@
+@if (filas().length) {
+  <section class="medidas">
+    <h3 class="medidas__titulo">{{ 'medidas.titulo' | t }}</h3>
+
+    <div class="medidas__marco">
+      <table class="medidas__tabla">
+        <thead>
+          <tr>
+            <th scope="col" class="medidas__esquina">{{ 'medidas.medida' | t }}</th>
+            @for (c of columnas(); track c.talla) {
+              <th scope="col" [class.elegida]="c.talla === seleccionada()">{{ c.talla }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (f of filas(); track f.clave) {
+            <tr>
+              <th scope="row">{{ f.clave | t }}</th>
+              @for (c of columnas(); track c.talla) {
+                <td [class.elegida]="c.talla === seleccionada()">
+                  {{ f.valores[c.talla] ?? '—' }}
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="medidas__nota">{{ 'medidas.nota' | t }}</p>
+  </section>
+}

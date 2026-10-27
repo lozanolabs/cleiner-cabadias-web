@@ -69,7 +69,23 @@
   color: var(--naranja-fin);
 }
 
-.tarjeta__precio { font-size: 1.05rem; color: var(--tinta-media); }
+/* ── Precio, con "desde" cuando varía por talla ── */
+.tarjeta__precio {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .35rem;
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--tinta-media);
+}
+
+.tarjeta__desde {
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--tinta-tenue);
+}
 
 /* ── Zona de acción ──────────────────────── */
 .tarjeta__accion {
@@ -113,12 +129,22 @@
   cursor: pointer;
   transition: all var(--transicion);
 }
-.chip:hover { border-color: var(--tinta-tenue); }
+.chip:hover:not(:disabled) { border-color: var(--tinta-tenue); }
+
 .chip--activo {
   background: var(--tinta);
   border-color: var(--tinta);
   color: #fff;
 }
+
+.chip--agotada {
+  background: var(--fondo-alt);
+  color: var(--tinta-tenue);
+  cursor: not-allowed;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.chip--agotada:hover { border-color: var(--linea); }
 
 /* ── Botón ───────────────────────────────── */
 .tarjeta__boton {

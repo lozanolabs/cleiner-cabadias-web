@@ -1,11 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Supabase } from '../../../core/supabase/supabase';
 import { Idioma, IDIOMA_POR_DEFECTO } from '../../../core/i18n/idioma';
-import { Producto } from '../models/producto.model';
+import { Producto, TallaProducto } from '../models/producto.model';
 
 const CAMPOS = `
-  id, slug, precio_cop, imagen_url, imagenes, tallas, stock, nombre, descripcion,
-  categorias!inner(slug, nombre)
+  id, slug, imagen_url, imagenes, nombre, descripcion,
+  categorias!inner(slug, nombre),
+  producto_tallas(talla, precio_cop, stock, medidas_talla(orden))
 `;
 
 export const PRODUCTOS_POR_PAGINA = 10;
@@ -54,13 +55,11 @@ export class Productos {
     return data ? this.aProducto(data) : null;
   }
 
-  /** Otros productos de la misma categoría, sin incluir el actual. */
   async relacionados(categoriaSlug: string, excluirId: string, limite = 4): Promise<Producto[]> {
     if (!categoriaSlug || !excluirId) return [];
 
     const { data, error } = await this.db
-      .from('productos')
-      .select(CAMPOS)
+      .from('productos').select(CAMPOS)
       .eq('activo', true)
       .eq('categorias.slug', categoriaSlug)
       .neq('id', excluirId)
@@ -77,22 +76,35 @@ export class Productos {
 
     const extras: string[] = Array.isArray(f.imagenes) ? f.imagenes.filter(Boolean) : [];
     const principal: string = f.imagen_url || extras[0] || '';
-    const galeria = principal
-      ? [principal, ...extras.filter(u => u !== principal)]
-      : [];
+    const galeria = principal ? [principal, ...extras.filter(u => u !== principal)] : [];
+
+    // El orden viene de medidas_talla, para que S, M, L, XL salgan en ese orden
+    // y no alfabéticamente.
+    const tallas: TallaProducto[] = (f.producto_tallas ?? [])
+      .map((t: any) => ({
+        talla: t.talla,
+        precio: t.precio_cop,
+        stock: t.stock ?? 0,
+        orden: t.medidas_talla?.orden ?? 99
+      }))
+      .sort((a: any, b: any) => a.orden - b.orden)
+      .map(({ orden, ...resto }: any) => resto as TallaProducto);
+
+    const precios = tallas.map(t => t.precio);
 
     return {
       id: f.id,
       slug: f.slug,
       nombre: f.nombre?.[l] ?? f.nombre?.[IDIOMA_POR_DEFECTO] ?? '',
       descripcion: f.descripcion?.[l] ?? f.descripcion?.[IDIOMA_POR_DEFECTO] ?? '',
-      precio: f.precio_cop,
       imagenUrl: principal,
       imagenes: galeria,
-      tallas: f.tallas ?? [],
-      stock: f.stock ?? 0,
+      tallas,
       categoriaSlug: f.categorias?.slug ?? '',
-      categoriaNombre: f.categorias?.nombre?.[l] ?? f.categorias?.nombre?.[IDIOMA_POR_DEFECTO] ?? ''
+      categoriaNombre: f.categorias?.nombre?.[l] ?? f.categorias?.nombre?.[IDIOMA_POR_DEFECTO] ?? '',
+      precioDesde: precios.length ? Math.min(...precios) : 0,
+      precioHasta: precios.length ? Math.max(...precios) : 0,
+      stockTotal: tallas.reduce((s, t) => s + t.stock, 0)
     };
   }
 }

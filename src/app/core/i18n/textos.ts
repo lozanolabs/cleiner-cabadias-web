@@ -114,6 +114,16 @@ export const TEXTOS = {
   'checkout.ventasCerradas': { es: 'La tienda está en vista previa. Las compras estarán disponibles muy pronto.', en: 'The store is in preview. Purchases will be available very soon.', fr: 'La boutique est en avant-première. Les achats seront disponibles très bientôt.', it: 'Il negozio è in anteprima. Gli acquisti saranno disponibili molto presto.', pt: 'A loja está em pré-visualização. As compras estarão disponíveis muito em breve.' },
   'whatsapp.escribenos': { es: 'Escríbenos', en: 'Message us on WhatsApp', fr: 'Écrivez-nous sur WhatsApp', it: 'Scrivici su WhatsApp', pt: 'Fale conosco no WhatsApp' },
   'whatsapp.mensaje': { es: 'Hola, vengo de la tienda en línea y quisiera más información.', en: 'Hi, I came from the online store and would like more information.', fr: 'Bonjour, je viens de la boutique en ligne et je souhaite plus d\'informations.', it: 'Ciao, vengo dal negozio online e vorrei maggiori informazioni.', pt: 'Olá, venho da loja online e gostaria de mais informações.' },
+    'medidas.titulo':         { es: 'Tabla de medidas', en: 'Size guide', fr: 'Guide des tailles', it: 'Guida alle taglie', pt: 'Tabela de medidas' },
+  'medidas.medida':         { es: 'Medida', en: 'Measurement', fr: 'Mesure', it: 'Misura', pt: 'Medida' },
+  'medidas.busto':          { es: 'Busto', en: 'Bust', fr: 'Poitrine', it: 'Busto', pt: 'Busto' },
+  'medidas.cintura':        { es: 'Cintura', en: 'Waist', fr: 'Taille', it: 'Vita', pt: 'Cintura' },
+  'medidas.cadera':         { es: 'Cadera', en: 'Hips', fr: 'Hanches', it: 'Fianchi', pt: 'Quadril' },
+  'medidas.contornoBrazo':  { es: 'Contorno de brazo', en: 'Arm circumference', fr: 'Tour de bras', it: 'Circonferenza braccio', pt: 'Contorno do braço' },
+  'medidas.anchoEspalda':   { es: 'Ancho de espalda', en: 'Back width', fr: 'Largeur du dos', it: 'Larghezza schiena', pt: 'Largura das costas' },
+  'medidas.largoBrazo':     { es: 'Largo de brazo', en: 'Arm length', fr: 'Longueur de bras', it: 'Lunghezza braccio', pt: 'Comprimento do braço' },
+  'medidas.nota':           { es: 'Medidas corporales en centímetros.', en: 'Body measurements in centimetres.', fr: 'Mensurations corporelles en centimètres.', it: 'Misure corporee in centimetri.', pt: 'Medidas corporais em centímetros.' },
+  'producto.desde':         { es: 'Desde', en: 'From', fr: 'À partir de', it: 'Da', pt: 'A partir de' },
 } as const satisfies Record<string, Traduccion>;
 
 export type ClaveTexto = keyof typeof TEXTOS;

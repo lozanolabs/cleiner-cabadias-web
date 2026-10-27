@@ -14,7 +14,12 @@
       <span class="tarjeta__categoria">{{ producto().categoriaNombre }}</span>
     }
 
-    <app-precio class="tarjeta__precio" [cop]="producto().precio" />
+    <p class="tarjeta__precio">
+      @if (mostrarDesde()) {
+        <span class="tarjeta__desde">{{ 'producto.desde' | t }}</span>
+      }
+      <app-precio [cop]="precioMostrado()" />
+    </p>
   </a>
 
   <div class="tarjeta__accion">
@@ -23,14 +28,17 @@
         {{ 'producto.agotado' | t }}
       </button>
     } @else {
-      @if (necesitaTalla()) {
+      @if (mostrarTallas()) {
         <fieldset class="tallas">
           <legend>{{ 'producto.talla' | t }}</legend>
-          @for (t of tallas(); track t) {
+          @for (t of tallas(); track t.talla) {
             <button type="button" class="chip"
-                    [class.chip--activo]="tallaElegida() === t"
-                    [attr.aria-pressed]="tallaElegida() === t"
-                    (click)="elegirTalla(t)">{{ t }}</button>
+                    [class.chip--activo]="tallaElegida()?.talla === t.talla"
+                    [class.chip--agotada]="t.stock <= 0"
+                    [disabled]="t.stock <= 0"
+                    [attr.aria-pressed]="tallaElegida()?.talla === t.talla"
+                    [title]="t.stock <= 0 ? ('producto.agotado' | t) : t.talla"
+                    (click)="elegirTalla(t)">{{ t.talla }}</button>
           }
         </fieldset>
       }
