@@ -21,9 +21,31 @@ import { MONEDA_BASE } from '../../../core/i18n/moneda';
     }
   `,
   styles: `
-    :host { display: inline-flex; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+    :host {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      column-gap: .5rem;
+      row-gap: 2px;
+    }
+
+    /* Hereda de quien lo usa, para que la tarjeta pueda ponerlo en Anton. */
     .precio { font-weight: 600; }
-    .precio__aprox { font-size: .85em; opacity: .7; }
+
+    /*
+     * El aproximado nunca hereda: es un dato secundario y debe verse igual
+     * en la tarjeta, el detalle, el carrito y el checkout.
+     */
+    .precio__aprox {
+      font-family: var(--fuente-texto);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.3;
+      color: var(--tinta-tenue);
+      opacity: 1;
+      white-space: nowrap;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

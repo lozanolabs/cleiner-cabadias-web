@@ -3,24 +3,58 @@
 @import 'tailwindcss';
 
 :root {
-  /* Marca */
-  --naranja-ini: #f68f3b;
-  --naranja-fin: #ca6922;
-  --naranja: #e07b2e;
-  --naranja-suave: #fdf1e6;
+  /* ═══ Paleta de marca ═══════════════════════════════════ */
+  --vino:          #8a2420;   /* fondos de sección, CTA secundaria */
+  --negro:         #111111;   /* nav, footer, titulares */
+  --mostaza:       #efb352;   /* acentos, CTA principal */
+  --verde:         #00603c;   /* WhatsApp y etiquetas */
+  --hueso:         #f7f3ed;   /* fondo general */
+  --marron:        #2e1a12;   /* texto sobre mostaza */
 
-  /* Neutros cálidos */
-  --fondo: #ffffff;
-  --fondo-alt: #faf7f3;
-  --tinta: #2a2521;
-  --tinta-media: #6b6259;
-  --tinta-tenue: #a89e94;
-  --linea: #ebe5dd;
+  /* ═══ Roles ════════════════════════════════════════════ */
+  --acento:        var(--mostaza);
+  --acento-hover:  #e3a23f;
+  /* Sobre mostaza SIEMPRE va marrón: con blanco el contraste es 1.8:1. */
+  --sobre-acento:  var(--marron);
+  --sobre-vino:    #ffffff;
 
-  --radio: 10px;
-  --radio-pastilla: 999px;
-  --sombra: 0 2px 14px rgba(42, 37, 33, .07);
-  --transicion: 180ms cubic-bezier(.4, 0, .2, 1);
+  /* ═══ Superficies ══════════════════════════════════════ */
+  --fondo:         var(--hueso);
+  --superficie:    #ffffff;   /* tarjetas y paneles */
+  --fondo-alt:     #ede4d6;   /* rellenos suaves, marcos de imagen */
+
+  /* ═══ Texto ════════════════════════════════════════════ */
+  --tinta:         var(--negro);
+  --tinta-media:   #6b625c;
+  --tinta-tenue:   #9c938c;
+  --linea:         #e6e2da;
+
+  /* ═══ Compatibilidad ═══════════════════════════════════
+     Los componentes existentes usan estos nombres. Apuntan a
+     la paleta nueva para que el sitio cambie de piel sin tocar
+     cada archivo. Se irán retirando a medida que migremos. */
+  --naranja-ini:   var(--mostaza);
+  --naranja-fin:   var(--acento-hover);
+  --naranja:       var(--mostaza);
+  --naranja-suave: #fbf0dc;
+
+  /* ═══ Tipografía ═══════════════════════════════════════ */
+  --fuente-display: Anton, system-ui, sans-serif;
+  --fuente-texto:   Montserrat, system-ui, sans-serif;
+
+  --t-display-1: clamp(44px, 9vw,  104px);
+  --t-display-2: clamp(34px, 6vw,   64px);
+  --t-display-3: clamp(26px, 4vw,   40px);
+  --t-display-4: clamp(20px, 2.4vw, 26px);
+  --t-cuerpo:    16px;
+  --t-menor:     14px;
+  --t-etiqueta:  12px;
+
+  /* ═══ Forma ════════════════════════════════════════════ */
+  --radio:          4px;      /* tarjetas, según el diseño */
+  --radio-pastilla: 100px;
+  --sombra:         0 2px 14px rgba(17, 17, 17, .07);
+  --transicion:     180ms cubic-bezier(.4, 0, .2, 1);
 }
 
 * { box-sizing: border-box; }
@@ -29,13 +63,34 @@ body {
   margin: 0;
   background: var(--fondo);
   color: var(--tinta);
-  font-family: Montserrat, system-ui, sans-serif;
-  font-size: 16px;
+  font-family: var(--fuente-texto);
+  font-size: var(--t-cuerpo);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
 img { max-width: 100%; }
+
+/* ═══ Utilidades del sistema ═════════════════════════════ */
+
+/* Titulares en Anton: mayúsculas, muy compactos. */
+.display {
+  font-family: var(--fuente-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: .95;
+  letter-spacing: -.01em;
+}
+
+/* Las etiquetas pequeñas que el diseño usa sobre cada sección. */
+.eyebrow {
+  font-family: var(--fuente-texto);
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  line-height: 1.2;
+}
 
 .contenedor {
   max-width: 1280px;

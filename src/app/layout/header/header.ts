@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component, HostListener, computed, inject, resource, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy, Component, HostListener, PLATFORM_ID,
+  computed, effect, inject, resource, signal
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
@@ -17,12 +21,25 @@ import { CarritoStore } from '../../features/carrito/services/carrito.store';
 export class Header {
   private readonly repoCategorias = inject(Categorias);
   private readonly router = inject(Router);
+  private readonly esNavegador = isPlatformBrowser(inject(PLATFORM_ID));
 
   readonly idioma = inject(Idioma);
   readonly carrito = inject(CarritoStore);
 
   readonly abierto = signal(false);
   readonly idiomaAbierto = signal(false);
+
+  readonly contacto = {
+    direccion: 'Quibdó, Chocó. Calle 16 #24 - 38, Barrio Jardín',
+    telefono: '+57 320 652 3244',
+    whatsapp: '573206523244'
+  };
+
+  /** Reemplaza por los perfiles reales del cliente. */
+  readonly redes = {
+    instagram: 'https://www.instagram.com/',
+    facebook: 'https://www.facebook.com/'
+  };
 
   private readonly recurso = resource({
     params: () => ({ idioma: this.idioma.actual() }),
@@ -38,8 +55,8 @@ export class Header {
     { initialValue: this.router.url }
   );
 
-  /** El carrito solo se muestra mientras el visitante está comprando. */
   readonly mostrarCarrito = computed(() => {
+    if (this.carrito.cantidad() > 0) return true;
     const u = this.url();
     return u.startsWith('/tienda') || u.startsWith('/carrito') || u.startsWith('/checkout');
   });
@@ -55,9 +72,18 @@ export class Header {
         this.abierto.set(false);
         this.idiomaAbierto.set(false);
       });
+
+    // El menú ocupa toda la pantalla: si el fondo sigue desplazándose,
+    // al cerrarlo el visitante aparece en otro punto de la página.
+    effect(() => {
+      const abierto = this.abierto();
+      if (!this.esNavegador) return;
+      document.body.style.overflow = abierto ? 'hidden' : '';
+    });
   }
 
   alternar(): void { this.abierto.update(v => !v); }
+  cerrar(): void { this.abierto.set(false); }
 
   alternarIdioma(): void { this.idiomaAbierto.update(v => !v); }
 
@@ -73,5 +99,8 @@ export class Header {
   }
 
   @HostListener('document:keydown.escape')
-  cerrarConEscape(): void { this.idiomaAbierto.set(false); }
+  cerrarConEscape(): void {
+    this.idiomaAbierto.set(false);
+    this.abierto.set(false);
+  }
 }

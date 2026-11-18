@@ -1,84 +1,111 @@
-<section class="carrito contenedor">
+<nav class="pasos" aria-label="Progreso de compra">
+  <span class="paso paso--activo">
+    <span class="paso__num">01</span>
+    <span class="paso__nombre">{{ 'carrito.paso1' | t }}</span>
+  </span>
+  <span class="pasos__sep" aria-hidden="true"></span>
+  <span class="paso">
+    <span class="paso__num">02</span>
+    <span class="paso__nombre">{{ 'carrito.paso2' | t }}</span>
+  </span>
+  <span class="pasos__sep" aria-hidden="true"></span>
+  <span class="paso">
+    <span class="paso__num">03</span>
+    <span class="paso__nombre">{{ 'carrito.paso3' | t }}</span>
+  </span>
+</nav>
 
-  @if (carrito.vacio()) {
-    <div class="carrito__vacio">
-      <svg viewBox="0 0 24 24" width="56" height="56" fill="none"
-           stroke="currentColor" stroke-width="1.2" aria-hidden="true">
-        <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.5a2 2 0 0 0 2-1.6L20.5 8H6"/>
-        <circle cx="10" cy="20" r="1.3" fill="currentColor" stroke="none"/>
-        <circle cx="17.5" cy="20" r="1.3" fill="currentColor" stroke="none"/>
-      </svg>
-      <h1>{{ 'carrito.vacio' | t }}</h1>
-      <a class="boton-principal" routerLink="/tienda">{{ 'carrito.irTienda' | t }}</a>
-    </div>
-  } @else {
-    <header class="carrito__encabezado">
-      <h1>{{ 'carrito.titulo' | t }}</h1>
-      <p class="carrito__conteo">{{ carrito.cantidad() }} {{ 'carrito.articulos' | t }}</p>
-    </header>
+@if (carrito.vacio()) {
+  <section class="vacio">
+    <h1 class="vacio__titulo display">{{ 'carrito.titulo' | t }}</h1>
+    <p>{{ 'carrito.vacio' | t }}</p>
+    <a class="vacio__boton" routerLink="/tienda">{{ 'carrito.irTienda' | t }}</a>
+  </section>
+} @else {
+  <section class="carrito">
+    <!-- ── Líneas ── -->
+    <div class="lineas">
+      <header class="lineas__head">
+        <div>
+          <h1 class="lineas__titulo display">{{ 'carrito.titulo' | t }}</h1>
+          <p class="lineas__conteo">
+            {{ carrito.cantidad() }} {{ 'carrito.articulos' | t }} · {{ 'carrito.conteoNota' | t }}
+          </p>
+        </div>
+        <a class="lineas__seguir" routerLink="/tienda">{{ 'carrito.seguirComprando' | t }}</a>
+      </header>
 
-    <div class="carrito__cuerpo">
-
-      <ul class="lista">
-        @for (item of carrito.items(); track item.productoId + (item.talla ?? '')) {
-          <li class="fila">
-            <a class="fila__imagen" [routerLink]="['/tienda/producto', item.slug]">
-              <img [src]="item.imagenUrl || 'assets/placeholder.svg'" [alt]="item.nombre"
-                   width="110" height="140" loading="lazy">
+      <ul class="items">
+        @for (i of carrito.items(); track i.productoId + (i.talla ?? '')) {
+          <li class="item">
+            <a class="item__imagen" [routerLink]="['/tienda/producto', i.slug]">
+              <img [src]="i.imagenUrl || 'assets/placeholder.svg'" [alt]="i.nombre" loading="lazy">
             </a>
 
-            <div class="fila__info">
-              <a class="fila__nombre" [routerLink]="['/tienda/producto', item.slug]">{{ item.nombre }}</a>
-              @if (item.talla) {
-                <span class="fila__talla">{{ 'producto.talla' | t }} {{ item.talla }}</span>
+            <div class="item__info">
+              <a class="item__nombre" [routerLink]="['/tienda/producto', i.slug]">{{ i.nombre }}</a>
+              @if (i.talla) {
+                <span class="item__variante">{{ 'producto.talla' | t }} {{ i.talla }}</span>
               }
-              <app-precio class="fila__unitario" [cop]="item.precio" />
             </div>
 
-            <div class="fila__cantidad">
-              <button type="button"
-                      (click)="carrito.actualizarCantidad(item.productoId, item.cantidad - 1, item.talla)"
-                      [attr.aria-label]="'producto.quitarUno' | t">−</button>
-              <span aria-live="polite">{{ item.cantidad }}</span>
-              <button type="button"
-                      (click)="carrito.actualizarCantidad(item.productoId, item.cantidad + 1, item.talla)"
-                      [attr.aria-label]="'producto.sumarUno' | t">+</button>
+            <div class="item__acciones">
+              <div class="cantidad">
+                <button type="button"
+                        (click)="carrito.actualizarCantidad(i.productoId, i.cantidad - 1, i.talla)"
+                        [attr.aria-label]="'producto.quitarUno' | t">−</button>
+                <span aria-live="polite">{{ i.cantidad }}</span>
+                <button type="button"
+                        (click)="carrito.actualizarCantidad(i.productoId, i.cantidad + 1, i.talla)"
+                        [attr.aria-label]="'producto.sumarUno' | t">+</button>
+              </div>
+
+              <button type="button" class="eliminar"
+                      (click)="carrito.eliminar(i.productoId, i.talla)">
+                {{ 'carrito.eliminar' | t }}
+              </button>
             </div>
 
-            <div class="fila__total">
-              <app-precio [cop]="item.precio * item.cantidad" />
-            </div>
-
-            <button type="button" class="fila__eliminar"
-                    (click)="carrito.eliminar(item.productoId, item.talla)"
-                    [attr.aria-label]="'carrito.eliminar' | t">
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="none"
-                   stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M6 6l12 12M18 6L6 18"/>
-              </svg>
-            </button>
+            <p class="item__precio">
+              <app-precio [cop]="i.precio * i.cantidad" />
+            </p>
           </li>
         }
       </ul>
-
-      <aside class="resumen">
-        <h2>{{ 'carrito.resumen' | t }}</h2>
-
-        <div class="resumen__linea">
-          <span>{{ 'carrito.subtotal' | t }}</span>
-          <app-precio [cop]="carrito.subtotal()" />
-        </div>
-
-        <div class="resumen__linea resumen__linea--tenue">
-          <span>{{ 'carrito.envio' | t }}</span>
-          <span>{{ 'carrito.envioNota' | t }}</span>
-        </div>
-
-        <a class="boton-principal" routerLink="/checkout">{{ 'carrito.finalizar' | t }}</a>
-
-        <a class="resumen__seguir" routerLink="/tienda">{{ 'carrito.seguirComprando' | t }}</a>
-      </aside>
-
     </div>
-  }
-</section>
+
+    <!-- ── Resumen ── -->
+    <aside class="resumen">
+      <h2 class="resumen__titulo eyebrow">{{ 'carrito.resumen' | t }}</h2>
+
+      <dl class="totales">
+        <div class="totales__fila">
+          <dt>{{ 'carrito.subtotal' | t }}</dt>
+          <dd><app-precio [cop]="carrito.subtotal()" /></dd>
+        </div>
+        <div class="totales__fila">
+          <dt>{{ 'carrito.envio' | t }}</dt>
+          <dd>
+            @if (envio() > 0) {
+              <app-precio [cop]="envio()" />
+            } @else {
+              <span class="gratis">{{ 'checkout.envioGratis' | t }}</span>
+            }
+          </dd>
+        </div>
+        <div class="totales__fila totales__fila--total">
+          <dt>{{ 'checkout.total' | t }}</dt>
+          <dd><app-precio [cop]="total()" /></dd>
+        </div>
+      </dl>
+
+      <a class="pagar" routerLink="/checkout">
+        {{ 'carrito.irPagar' | t }}
+        <span aria-hidden="true">→</span>
+      </a>
+
+      <p class="resumen__nota">{{ 'carrito.notaPagos' | t }}</p>
+      <p class="resumen__nota">{{ 'carrito.notaEnvio' | t }}</p>
+    </aside>
+  </section>
+}

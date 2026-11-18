@@ -1,109 +1,123 @@
-<!-- ═══ Portada fija ═══════════════════════════════════ -->
-<section class="portada">
-  <img class="portada__img" src="assets/proposito.jpg"
-       [alt]="'menu.proposito' | t" fetchpriority="high">
-  <div class="portada__velo"></div>
-  <h1 class="portada__titulo">{{ 'menu.proposito' | t }}</h1>
+<!-- ═══ HERO ══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero__head">
+    <div class="hero__izq">
+      <nav class="miga" aria-label="breadcrumb">
+        <a routerLink="/">{{ 'catalogo.inicio' | t }}</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ 'menu.proposito' | t }}</span>
+      </nav>
+      <h1 class="hero__titulo display">{{ 'prop.titulo' | t }}</h1>
+    </div>
+
+    <div class="hero__der">
+      <p class="hero__nota">{{ 'prop.intro' | t }}</p>
+      <p class="hero__badge eyebrow">
+        <span class="punto" aria-hidden="true"></span>
+        {{ 'prop.badge' | t }}
+      </p>
+    </div>
+  </div>
+
+  <div class="hero__video">
+    <video autoplay muted loop playsinline
+           poster="assets/me-encanta-poster.jpg" aria-hidden="true">
+      <source src="assets/me-encanta.mp4" type="video/mp4">
+    </video>
+  </div>
 </section>
 
-<!-- ═══ Línea de tiempo ════════════════════════════════ -->
-<div class="linea">
-  @for (h of hitos; track h.anio) {
-    <article class="hito" [class.hito--der]="h.lado === 'der'">
+<!-- ═══ MANIFIESTO ════════════════════════════════════════ -->
+<section class="manifiesto">
+  <div class="manifiesto__copy">
+    <p class="eyebrow eyebrow--vino">{{ 'prop.manifiestoEyebrow' | t }}</p>
+    <blockquote class="manifiesto__cita display">{{ 'prop.manifiestoCita' | t }}</blockquote>
+    <p class="manifiesto__cuerpo">{{ 'prop.manifiestoCuerpo' | t }}</p>
+    <div class="firma">
+      <strong class="firma__nombre">Cleiner Cabadías</strong>
+      <span class="firma__rol">{{ 'prop.firmaRol' | t }}</span>
+    </div>
+  </div>
+  <div class="manifiesto__imagen">
+    <img src="assets/proposito.jpg" alt="" loading="lazy">
+  </div>
+</section>
 
-      <div class="hito__foto">
-        @if (h.imagen) {
-          <img [src]="h.imagen" [alt]="txt(h.alt)" loading="lazy" decoding="async">
+<!-- ═══ CAPÍTULOS ═════════════════════════════════════════ -->
+@for (c of capitulos; track c.eyebrow) {
+  <section class="capitulo" [class.capitulo--invertido]="c.invertido">
+    <div class="capitulo__imagen">
+      <img [src]="c.imagen" alt="" loading="lazy">
+    </div>
+
+    <div class="capitulo__copy">
+      <p class="eyebrow eyebrow--vino">{{ c.eyebrow | t }}</p>
+      <h2 class="capitulo__titulo display">{{ c.titulo | t }}</h2>
+      <p class="capitulo__cuerpo">{{ c.cuerpo | t }}</p>
+
+      <ol class="lista">
+        @for (i of c.items; track i.num) {
+          <li class="lista__item">
+            <span class="lista__num display">{{ i.num }}</span>
+            <div class="lista__texto">
+              <strong class="lista__titulo">{{ i.titulo | t }}</strong>
+              <span class="lista__desc">{{ i.desc | t }}</span>
+            </div>
+          </li>
         }
+      </ol>
+    </div>
+  </section>
+}
+
+<!-- ═══ MÉTRICAS ══════════════════════════════════════════ -->
+<section class="transformacion">
+  <div class="transformacion__head">
+    <div>
+      <p class="eyebrow eyebrow--mostaza">{{ 'prop.cap4Eyebrow' | t }}</p>
+      <h2 class="transformacion__titulo display">{{ 'prop.cap4Titulo' | t }}</h2>
+    </div>
+    <p class="transformacion__nota">{{ 'prop.cap4Nota' | t }}</p>
+  </div>
+
+  <dl class="metricas">
+    @for (m of metricas; track m.numero) {
+      <div class="metrica">
+        <dt class="metrica__num display">{{ m.numero }}</dt>
+        <dd class="metrica__label">{{ m.label | t }}</dd>
       </div>
+    }
+  </dl>
+</section>
 
-      <div class="hito__cuerpo">
-        <div class="hito__marca">
-          <span class="hito__anio">{{ h.anio }}</span>
-          <span class="hito__raya" aria-hidden="true"></span>
+<!-- ═══ LÍNEA DE TIEMPO ═══════════════════════════════════ -->
+<section class="hitos">
+  <div class="hitos__head">
+    <p class="eyebrow eyebrow--vino">{{ 'prop.hitosEyebrow' | t }}</p>
+    <h2 class="hitos__titulo display">{{ 'prop.hitosTitulo' | t }}</h2>
+  </div>
+
+  <ol class="hitos__lista">
+    @for (h of hitos; track h.anio) {
+      <li class="hito">
+        <span class="hito__anio display">{{ h.anio }}</span>
+        <div class="hito__texto">
+          <strong class="hito__titulo">{{ h.titulo | t }}</strong>
+          <span class="hito__desc">{{ h.desc | t }}</span>
         </div>
-
-        <div class="hito__detalle">
-          @if (h.cifras?.length) {
-            <ul class="cifras">
-              @for (c of h.cifras; track c.icono) {
-                <li class="cifra">
-                  <ng-container [ngTemplateOutlet]="icono"
-                                [ngTemplateOutletContext]="{ $implicit: c.icono }" />
-                  <span>{{ txt(c.texto) }}</span>
-                </li>
-              }
-            </ul>
-          }
-
-          @for (p of h.parrafos; track $index) {
-            <p [innerHTML]="txt(p)"></p>
-          }
-        </div>
-      </div>
-
-    </article>
-  }
-</div>
-
-<!-- ═══ Actualmente ════════════════════════════════════ -->
-<section class="actualmente">
-  <h2 class="actualmente__titulo">{{ 'proposito.actualmente' | t }}</h2>
-  <span class="actualmente__raya" aria-hidden="true"></span>
-
-  <ul class="cifras cifras--centrada">
-    @for (c of actuales; track c.icono) {
-      <li class="cifra">
-        <ng-container [ngTemplateOutlet]="icono"
-                      [ngTemplateOutletContext]="{ $implicit: c.icono }" />
-        <span>{{ txt(c.texto) }}</span>
       </li>
     }
-  </ul>
-
-  <p class="actualmente__texto" [innerHTML]="txt(cierre)"></p>
+  </ol>
 </section>
 
-<!-- ═══ Iconos ═════════════════════════════════════════ -->
-<ng-template #icono let-nombre>
-  <svg viewBox="0 0 48 48" fill="none" stroke="currentColor"
-       stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
-       aria-hidden="true">
-    @switch (nombre) {
-      @case ('personas') {
-        <circle cx="24" cy="15" r="6"/>
-        <path d="M13 38c0-6 4.9-10 11-10s11 4 11 10"/>
-        <circle cx="9" cy="19.5" r="4.2"/>
-        <path d="M2.5 36c0-4.4 3-7.3 6.5-7.3"/>
-        <circle cx="39" cy="19.5" r="4.2"/>
-        <path d="M45.5 36c0-4.4-3-7.3-6.5-7.3"/>
-      }
-      @case ('maquina') {
-        <path d="M4 37h40v-4.5H4z"/>
-        <path d="M10.5 32.5V17h21"/>
-        <path d="M31.5 17h7v11.5"/>
-        <path d="M35 28.5v4.5"/>
-        <circle cx="15" cy="23.5" r="3.2"/>
-      }
-      @case ('indigena') {
-        <path d="M13.5 19c0-5.8 4.7-10.5 10.5-10.5S34.5 13.2 34.5 19"/>
-        <path d="M11 19h26"/>
-        <circle cx="24" cy="25.5" r="6.5"/>
-        <path d="M11.5 41c0-6.2 5.6-10.5 12.5-10.5S36.5 34.8 36.5 41"/>
-      }
-      @case ('mayor') {
-        <circle cx="21" cy="10.5" r="5"/>
-        <path d="M21 16v13"/>
-        <path d="M21 29l-4.5 12M21 29l4.5 12"/>
-        <path d="M21 20l-6 3.5M21 20l6 3.5"/>
-        <path d="M34.5 17.5v23"/>
-      }
-      @case ('reciclaje') {
-        <path d="M12 17h24l-2.4 23H14.4z"/>
-        <path d="M18.5 17v-3.5a5.5 5.5 0 0 1 11 0V17"/>
-        <path d="M21 31l3-4.5 3 4.5"/>
-        <path d="M24 26.5V35"/>
-      }
-    }
-  </svg>
-</ng-template>
+<!-- ═══ CTA ═══════════════════════════════════════════════ -->
+<section class="cta">
+  <div class="cta__copy">
+    <h2 class="cta__titulo display">{{ 'prop.ctaTitulo' | t }}</h2>
+    <p class="cta__desc">{{ 'prop.ctaDesc' | t }}</p>
+  </div>
+  <a class="cta__boton" routerLink="/tienda">
+    {{ 'inicio.verTienda' | t }}
+    <span aria-hidden="true">→</span>
+  </a>
+</section>

@@ -1,26 +1,40 @@
 @if (cargando()) {
-  <div class="detalle detalle--esqueleto">
+  <div class="ficha ficha--esqueleto">
     <div class="esqueleto esqueleto--imagen"></div>
     <div class="esqueleto esqueleto--texto"></div>
   </div>
 } @else if (noEncontrado()) {
-  <section class="detalle__vacio">
+  <section class="vacio">
     <h1>{{ 'producto.noExiste' | t }}</h1>
     <a routerLink="/tienda">{{ 'producto.volverTienda' | t }}</a>
   </section>
 } @else if (producto(); as p) {
-  <article class="detalle">
 
-    <div class="detalle__galeria">
+  <nav class="rutas" aria-label="breadcrumb">
+    <a routerLink="/">{{ 'catalogo.inicio' | t }}</a>
+    <span aria-hidden="true">/</span>
+    <a routerLink="/tienda">{{ 'menu.tienda' | t }}</a>
+    @if (p.categoriaSlug) {
+      <span aria-hidden="true">/</span>
+      <a [routerLink]="['/tienda', p.categoriaSlug]">{{ p.categoriaNombre }}</a>
+    }
+    <span aria-hidden="true">/</span>
+    <span class="rutas__actual">{{ p.nombre }}</span>
+  </nav>
+
+  <article class="ficha">
+    <!-- ── Galería ── -->
+    <div class="galeria">
       <div class="galeria__principal">
-        <img [src]="imagenActiva()" [alt]="p.nombre" width="800" height="1000">
+        <img [src]="imagenActiva()" [alt]="p.nombre" width="620" height="760">
+        <span class="galeria__badge">{{ 'producto.piezaUnica' | t }}</span>
       </div>
 
       @if (p.imagenes.length > 1) {
         <div class="galeria__miniaturas">
-          @for (img of p.imagenes; track img) {
-            <button type="button" class="miniatura"
-                    [class.miniatura--activa]="img === imagenActiva()"
+          @for (img of p.imagenes.slice(0, 4); track img) {
+            <button type="button" class="thumb"
+                    [class.thumb--activa]="img === imagenActiva()"
                     [attr.aria-label]="'producto.verImagen' | t"
                     (click)="elegirImagen(img)">
               <img [src]="img" alt="" loading="lazy">
@@ -30,89 +44,134 @@
       }
     </div>
 
-    <div class="detalle__info">
-      <nav class="miga">
-        <a routerLink="/tienda">{{ 'menu.tienda' | t }}</a>
-        <span aria-hidden="true">/</span>
-        <a [routerLink]="['/tienda', p.categoriaSlug]">{{ p.categoriaNombre || p.categoriaSlug }}</a>
-      </nav>
-
-      <h1 class="detalle__nombre">{{ p.nombre }}</h1>
-
-      <p class="detalle__precio">
-        @if (mostrarDesde()) {
-          <span class="detalle__desde">{{ 'producto.desde' | t }}</span>
+    <!-- ── Información ── -->
+    <div class="info">
+      <div class="tags">
+        @if (p.categoriaNombre) {
+          <span class="tag tag--vino">{{ p.categoriaNombre }}</span>
         }
-        <app-precio [cop]="precioMostrado()" />
-      </p>
+        <span class="tag tag--linea">{{ 'producto.hechoAMano' | t }}</span>
+      </div>
+
+      <header class="titulo">
+        <h1 class="titulo__nombre display">{{ p.nombre }}</h1>
+        <p class="titulo__precio">
+          @if (mostrarDesde()) {
+            <span class="titulo__desde">{{ 'producto.desde' | t }}</span>
+          }
+          <app-precio [cop]="precioMostrado()" />
+        </p>
+      </header>
 
       @if (p.descripcion) {
-        <p class="detalle__descripcion">{{ p.descripcion }}</p>
+        <p class="descripcion">{{ p.descripcion }}</p>
       }
 
+      <!-- ── Tallas ── -->
       @if (!agotado() && mostrarTallas()) {
-        <fieldset class="tallas">
-          <legend>{{ 'producto.talla' | t }}</legend>
-          @for (t of p.tallas; track t.talla) {
-            <button type="button"
-                    class="tallas__opcion"
-                    [class.elegida]="tallaElegida()?.talla === t.talla"
-                    [class.agotada]="t.stock <= 0"
-                    [disabled]="t.stock <= 0"
-                    [attr.aria-pressed]="tallaElegida()?.talla === t.talla"
-                    (click)="elegirTalla(t)">
-              <span class="tallas__letra">{{ t.talla }}</span>
-              @if (mostrarPrecioEnTalla()) {
-                <app-precio class="tallas__precio" [cop]="t.precio" />
-              }
-            </button>
+        <section class="tallas">
+          <div class="tallas__head">
+            <span class="eyebrow">{{ 'producto.talla' | t }}</span>
+            <button type="button" class="tallas__guia"
+                    [attr.aria-expanded]="guiaAbierta()"
+                    (click)="alternarGuia()">{{ 'producto.guiaTallas' | t }}</button>
+          </div>
+
+          <div class="tallas__opciones">
+            @for (t of p.tallas; track t.talla) {
+              <button type="button" class="opcion"
+                      [class.opcion--activa]="tallaElegida()?.talla === t.talla"
+                      [class.opcion--agotada]="t.stock <= 0"
+                      [disabled]="t.stock <= 0"
+                      [attr.aria-pressed]="tallaElegida()?.talla === t.talla"
+                      (click)="elegirTalla(t)">
+                <span class="opcion__letra">{{ t.talla }}</span>
+                @if (mostrarPrecioEnTalla()) {
+                  <app-precio class="opcion__precio" [cop]="t.precio" />
+                }
+              </button>
+            }
+          </div>
+
+          @if (tallasAgotadas().length) {
+            <p class="tallas__nota">
+              {{ 'producto.tallasAgotadas' | t }} {{ tallasAgotadas().join(', ') }}
+            </p>
           }
-        </fieldset>
+
+          @if (guiaAbierta()) {
+            <app-tabla-medidas
+              [tallas]="nombresTallas()"
+              [seleccionada]="nombreTallaElegida()" />
+          }
+        </section>
       }
 
-      @if (!agotado() && puedeAgregar()) {
-        <div class="cantidad">
-          <button type="button" (click)="cambiarCantidad(-1)"
-                  [disabled]="cantidad() === 1"
-                  [attr.aria-label]="'producto.quitarUno' | t">−</button>
-          <span aria-live="polite">{{ cantidad() }}</span>
-          <button type="button" (click)="cambiarCantidad(1)"
-                  [disabled]="cantidad() >= maximo()"
-                  [attr.aria-label]="'producto.sumarUno' | t">+</button>
-        </div>
-      }
-
+      <!-- ── Compra ── -->
       @if (agotado()) {
         <p class="aviso aviso--agotado" role="status">{{ 'producto.agotadoNota' | t }}</p>
-      } @else if (pocasUnidades(); as quedan) {
-        <p class="aviso aviso--pocas">{{ 'producto.pocasUnidades' | t }} {{ quedan }}</p>
+      } @else {
+        @if (pocasUnidades(); as quedan) {
+          <p class="aviso aviso--pocas">{{ 'producto.pocasUnidades' | t }} {{ quedan }}</p>
+        }
+
+        <div class="compra">
+          @if (puedeAgregar()) {
+            <div class="cantidad">
+              <button type="button" (click)="cambiarCantidad(-1)"
+                      [disabled]="cantidad() === 1"
+                      [attr.aria-label]="'producto.quitarUno' | t">−</button>
+              <span aria-live="polite">{{ cantidad() }}</span>
+              <button type="button" (click)="cambiarCantidad(1)"
+                      [disabled]="cantidad() >= maximo()"
+                      [attr.aria-label]="'producto.sumarUno' | t">+</button>
+            </div>
+          }
+
+          <button type="button" class="agregar"
+                  [class.agregar--ok]="agregado()"
+                  [disabled]="!puedeAgregar()"
+                  (click)="agregar()">
+            {{ (agregado() ? 'producto.agregado'
+                           : puedeAgregar() ? 'producto.anadirCarrito'
+                           : 'producto.elijaTalla') | t }}
+          </button>
+        </div>
+
+        @if (agregado()) {
+          <p class="aviso" role="status">
+            {{ 'producto.agregado' | t }}
+            <a routerLink="/carrito">{{ 'carrito.ver' | t }}</a>
+          </p>
+        }
       }
 
-      <button type="button" class="agregar"
-              [disabled]="!puedeAgregar()"
-              (click)="agregar()">
-        {{ (agotado() ? 'producto.agotado'
-                      : puedeAgregar() ? 'producto.agregar'
-                      : 'producto.elijaTalla') | t }}
-      </button>
-
-      @if (agregado()) {
-        <p class="aviso" role="status">
-          {{ 'producto.agregado' | t }}
-          <a routerLink="/carrito">{{ 'carrito.ver' | t }}</a>
-        </p>
-      }
-
-      <app-tabla-medidas
-        [tallas]="nombresTallas()"
-        [seleccionada]="nombreTallaElegida()" />
+      <!-- ── Beneficios ── -->
+      <ul class="beneficios">
+        @for (b of beneficios; track b.titulo) {
+          <li class="beneficio">
+            <strong class="beneficio__titulo">{{ b.titulo | t }}</strong>
+            <span class="beneficio__desc">{{ b.desc | t }}</span>
+          </li>
+        }
+      </ul>
     </div>
-
   </article>
 
+  <!-- ── Relacionados ── -->
   @if (relacionados().length) {
     <section class="relacionados">
-      <h2>{{ 'producto.relacionados' | t }}</h2>
+      <header class="relacionados__head">
+        <div>
+          <p class="eyebrow eyebrow--vino">{{ 'producto.sigueExplorando' | t }}</p>
+          <h2 class="relacionados__titulo display">{{ 'producto.relacionados' | t }}</h2>
+        </div>
+        <a class="relacionados__todo" routerLink="/tienda">
+          {{ 'producto.verTodaTienda' | t }}
+          <span aria-hidden="true">→</span>
+        </a>
+      </header>
+
       <div class="relacionados__rejilla">
         @for (r of relacionados(); track r.id) {
           <app-tarjeta-producto [producto]="r" />

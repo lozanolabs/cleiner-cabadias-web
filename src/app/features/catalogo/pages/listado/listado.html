@@ -1,8 +1,41 @@
-<section class="catalogo contenedor">
-  <header class="catalogo__encabezado">
-    <h1>{{ tituloCategoria() }}</h1>
-  <p class="catalogo__conteo">{{ catalogo.total() }} {{ 'catalogo.productos' | t }}</p>
-  </header>
+<header class="cabeza">
+  <div class="cabeza__top">
+    <div class="cabeza__izq">
+      <nav class="miga" aria-label="breadcrumb">
+        <a routerLink="/">{{ 'catalogo.inicio' | t }}</a>
+        <span aria-hidden="true">/</span>
+        @if (enCategoria()) {
+          <a routerLink="/tienda">{{ 'menu.tienda' | t }}</a>
+          <span aria-hidden="true">/</span>
+          <span class="miga__actual">{{ categoriaActual()?.nombre }}</span>
+        } @else {
+          <span class="miga__actual">{{ 'menu.tienda' | t }}</span>
+        }
+      </nav>
+
+      <h1 class="cabeza__titulo display">
+        {{ categoriaActual()?.nombre ?? ('menu.tienda' | t) }}
+      </h1>
+    </div>
+
+    <p class="cabeza__nota">{{ 'catalogo.nota' | t }}</p>
+  </div>
+
+  <div class="filtros">
+    <a class="filtro" routerLink="/tienda" routerLinkActive="filtro--activo"
+       [routerLinkActiveOptions]="{ exact: true }">{{ 'catalogo.todo' | t }}</a>
+
+    @for (cat of categorias(); track cat.id) {
+      <a class="filtro" [routerLink]="['/tienda', cat.slug]"
+         routerLinkActive="filtro--activo">{{ cat.nombre }}</a>
+    }
+  </div>
+</header>
+
+<section class="catalogo">
+  <p class="catalogo__conteo">
+    {{ catalogo.total() }} {{ 'catalogo.productos' | t }}
+  </p>
 
   @if (catalogo.cargando()) {
     <div class="rejilla">
@@ -23,5 +56,30 @@
         <app-tarjeta-producto [producto]="producto" />
       }
     </div>
+
+    @if (catalogo.totalPaginas() > 1) {
+      <nav class="paginacion" aria-label="Paginación">
+        <button type="button" class="pag pag--flecha"
+                [disabled]="catalogo.pagina() === 1"
+                (click)="catalogo.irA(catalogo.pagina() - 1)"
+                aria-label="Anterior">←</button>
+
+        @for (p of catalogo.paginasVisibles(); track $index) {
+          @if (p === '…') {
+            <span class="pag__elipsis" aria-hidden="true">…</span>
+          } @else {
+            <button type="button" class="pag"
+                    [class.pag--actual]="p === catalogo.pagina()"
+                    [attr.aria-current]="p === catalogo.pagina() ? 'page' : null"
+                    (click)="catalogo.irA(p)">{{ p }}</button>
+          }
+        }
+
+        <button type="button" class="pag pag--flecha"
+                [disabled]="catalogo.pagina() === catalogo.totalPaginas()"
+                (click)="catalogo.irA(catalogo.pagina() + 1)"
+                aria-label="Siguiente">→</button>
+      </nav>
+    }
   }
 </section>

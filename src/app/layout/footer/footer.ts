@@ -15,18 +15,26 @@ export class Footer {
   private readonly repoCategorias = inject(Categorias);
   private readonly idioma = inject(Idioma);
 
+  /** Las mismas categorías del encabezado, para que los nombres no se desincronicen. */
   private readonly recurso = resource({
     params: () => ({ idioma: this.idioma.actual() }),
     loader: () => this.repoCategorias.listar()
   });
-
   readonly categorias = computed(() => this.recurso.value() ?? []);
+
   readonly anio = new Date().getFullYear();
 
-  readonly direccion = 'Quibdó, Chocó. Calle 16 #24 - 38 "Barrio Jardín"';
-  readonly correo = 'compras@cleinercabadias.com';
-  readonly telefono = '+57 320 652 3244';
-  readonly whatsapp = '573206523244';
-  readonly instagram = 'https://instagram.com/cleinercabadias';
-  readonly facebook = 'https://facebook.com/cleinercabadias';
+    readonly contacto = {
+    direccion: 'Quibdó, Chocó. Calle 16 #24 - 38',
+    correo: 'compras@cleinercabadias.com',
+    telefono: '+57 320 652 3244',
+    telefonoEnlace: '+573206523244',
+    whatsapp: '573206523244'
+  };
+
+  /** Reemplaza por los perfiles reales del cliente. */
+  readonly redes = {
+    instagram: 'https://www.instagram.com/',
+    facebook: 'https://www.facebook.com/'
+  };
 }

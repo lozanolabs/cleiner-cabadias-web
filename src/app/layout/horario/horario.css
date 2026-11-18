@@ -1,92 +1,96 @@
-.horario { padding-block: 4.5rem 5rem; }
-
-.horario__cuerpo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.horario__icono {
+.visita {
   display: grid;
-  place-items: center;
-  width: 58px;
-  height: 58px;
-  margin-bottom: 1.3rem;
-  border: 2px solid var(--naranja);
-  border-radius: 50%;
-  color: var(--naranja);
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  padding: 96px 56px;
+  background: var(--hueso);
 }
 
-.horario__ante {
-  margin: 0 0 .45rem;
-  color: var(--naranja);
-  font-size: .95rem;
-  font-weight: 600;
+/* ── Columna de texto ────────────────────────── */
+.visita__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+.visita__copy .eyebrow { margin: 0; }
+
+.visita__titulo {
+  margin: 0;
+  max-width: 12ch;
+  font-size: var(--t-display-2);
+  color: var(--negro);
 }
 
-.horario__titulo {
-  margin: 0 0 2.2rem;
-  font-size: clamp(1.7rem, 4vw, 2.7rem);
-  font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -.02em;
-  color: var(--tinta);
-  max-width: 20ch;
+.visita__direccion {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--tinta-media);
 }
 
-/* ── Tabla ───────────────────────────────── */
+.visita__wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding: 14px 26px;
+  background: var(--verde);
+  border-radius: var(--radio-pastilla);
+  color: #fff;
+  text-decoration: none;
+  font-size: var(--t-etiqueta);
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  transition: transform var(--transicion), filter var(--transicion);
+}
+.visita__wa:hover { transform: translateY(-2px); filter: brightness(1.12); }
+.visita__wa:active { transform: translateY(0); }
+
+/* ── Tabla ───────────────────────────────────── */
 .tabla {
-  list-style: none;
-  margin: 0 0 2.2rem;
-  padding: 0;
-  width: 100%;
-  max-width: 660px;
+  margin: 0;
   border: 1px solid var(--linea);
   border-radius: var(--radio);
+  background: var(--superficie);
   overflow: hidden;
-  box-shadow: var(--sombra);
 }
 
 .tabla__fila {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.05rem 1.4rem;
-  font-size: .98rem;
-  text-align: left;
+  gap: 24px;
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--linea);
 }
-.tabla__fila + .tabla__fila { border-top: 1px solid var(--linea); }
+.tabla__fila:last-child { border-bottom: 0; }
 
-.tabla__fila--cerrado {
-  background: linear-gradient(90deg, var(--naranja-ini), var(--naranja-fin));
-  border-top-color: rgba(255, 255, 255, .28);
-  color: #fff;
-  font-weight: 500;
-}
-
-/* ── Botón de WhatsApp ───────────────────── */
-.horario__wa {
-  display: inline-flex;
-  align-items: center;
-  gap: .65rem;
-  padding: .95rem 2.2rem;
-  background: #25d366;
-  border-radius: var(--radio-pastilla);
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.02rem;
+.tabla__dia {
+  margin: 0;
+  font-size: 15px;
   font-weight: 700;
-  transition: filter var(--transicion), transform var(--transicion);
+  color: var(--negro);
 }
-.horario__wa:hover { filter: brightness(1.06); }
-.horario__wa:active { transform: translateY(1px); }
-.horario__wa:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; }
 
-/* ── Adaptación ──────────────────────────── */
-@media (max-width: 560px) {
-  .horario { padding-block: 3rem 3.5rem; }
-  .tabla__fila { flex-direction: column; align-items: flex-start; gap: .2rem; padding: .9rem 1.1rem; }
-  .horario__wa { width: 100%; justify-content: center; padding-inline: 1rem; }
+.tabla__hora {
+  margin: 0;
+  font-size: 15px;
+  color: var(--tinta-media);
+  white-space: nowrap;
+}
+.tabla__hora--cerrado {
+  font-weight: 700;
+  color: var(--vino);
+}
+
+.visita__wa:focus-visible {
+  outline: 2px solid var(--vino);
+  outline-offset: 3px;
+}
+
+/* ── Móvil ───────────────────────────────────── */
+@media (max-width: 900px) {
+  .visita { grid-template-columns: 1fr; gap: 32px; padding: 64px 20px; }
+  /* El diseño móvil no muestra la dirección aquí; vive en el pie. */
+  .visita__direccion { display: none; }
+  .tabla__fila { padding: 18px 20px; }
 }

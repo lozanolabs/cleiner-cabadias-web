@@ -1,19 +1,22 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, PLATFORM_ID, inject, signal } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TPipe } from '../../../../core/i18n/t.pipe';
-import { Idioma } from '../../../../core/i18n/idioma';
 import { Horario } from '../../../../layout/horario/horario';
+import { ClaveTexto } from '../../../../core/i18n/textos';
+import { TPipe } from '../../../../core/i18n/t.pipe';
 
+interface Coleccion {
+  etiqueta: ClaveTexto;
+  titulo: ClaveTexto;
+  descripcion: ClaveTexto;
+  imagen: string;
+  ruta: string;
+}
 
-
-const PALABRAS: Record<string, string[]> = {
-  es: ['Identidad', 'Cultura', 'Diferencia', 'Historia'],
-  en: ['Identity', 'Culture', 'Difference', 'History'],
-  fr: ['Identité', 'Culture', 'Différence', 'Histoire'],
-  it: ['Identità', 'Cultura', 'Differenza', 'Storia'],
-  pt: ['Identidade', 'Cultura', 'Diferença', 'História']
-};
+interface Pilar {
+  numero: string;
+  titulo: ClaveTexto;
+  descripcion: ClaveTexto;
+}
 
 @Component({
   selector: 'app-inicio',
@@ -22,57 +25,20 @@ const PALABRAS: Record<string, string[]> = {
   styleUrl: './inicio.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Inicio implements OnDestroy {
-  private readonly idioma = inject(Idioma);
-  private readonly esNavegador = isPlatformBrowser(inject(PLATFORM_ID));
+export class Inicio {
+  readonly colecciones: Coleccion[] = [
+    { etiqueta: 'inicio.mujer',      titulo: 'inicio.mujer',      descripcion: 'inicio.mujerDesc',      imagen: 'assets/mujeres.png',   ruta: '/tienda' },
+    { etiqueta: 'inicio.hombre',     titulo: 'inicio.hombre',     descripcion: 'inicio.hombreDesc',     imagen: 'assets/HOMBRES1.png',  ruta: '/tienda' },
+    { etiqueta: 'inicio.accesorios', titulo: 'inicio.accesorios', descripcion: 'inicio.accesoriosDesc', imagen: 'assets/accesorios.jpg', ruta: '/tienda/accesorios' }
+  ];
 
-  readonly palabra = signal('');
-  private temporizador?: ReturnType<typeof setTimeout>;
+  readonly pilares: Pilar[] = [
+    { numero: '01', titulo: 'inicio.pilar1', descripcion: 'inicio.pilar1Desc' },
+    { numero: '02', titulo: 'inicio.pilar2', descripcion: 'inicio.pilar2Desc' },
+    { numero: '03', titulo: 'inicio.pilar3', descripcion: 'inicio.pilar3Desc' },
+    { numero: '04', titulo: 'inicio.pilar4', descripcion: 'inicio.pilar4Desc' }
+  ];
 
-  constructor() {
-    if (!this.esNavegador) {
-      this.palabra.set(PALABRAS[this.idioma.actual()][0]);
-      return;
-    }
-
-    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducido) {
-      this.palabra.set(PALABRAS[this.idioma.actual()][0]);
-      return;
-    }
-
-    this.escribir(0, 0, false);
-  }
-
-  private escribir(indice: number, letras: number, borrando: boolean): void {
-    const lista = PALABRAS[this.idioma.actual()] ?? PALABRAS['es'];
-    const completa = lista[indice % lista.length];
-
-    this.palabra.set(completa.slice(0, letras));
-
-    let espera = borrando ? 55 : 110;
-    let siguienteIndice = indice;
-    let siguientesLetras = letras;
-    let siguienteBorrando = borrando;
-
-    if (!borrando && letras === completa.length) {
-      espera = 1800;
-      siguienteBorrando = true;
-    } else if (borrando && letras === 0) {
-      siguienteBorrando = false;
-      siguienteIndice = indice + 1;
-      espera = 350;
-    } else {
-      siguientesLetras = borrando ? letras - 1 : letras + 1;
-    }
-
-    this.temporizador = setTimeout(
-      () => this.escribir(siguienteIndice, siguientesLetras, siguienteBorrando),
-      espera
-    );
-  }
-
-  ngOnDestroy(): void {
-    clearTimeout(this.temporizador);
-  }
+  /** La cinta se repite para que el desplazamiento sea continuo. */
+  readonly repeticionesTicker = [0, 1, 2, 3, 4, 5, 6, 7];
 }

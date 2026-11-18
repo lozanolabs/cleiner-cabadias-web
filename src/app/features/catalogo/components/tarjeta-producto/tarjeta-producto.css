@@ -1,185 +1,220 @@
-:host { display: block; height: 100%; }
+:host { display: block; height: 100%; min-width: 0; }
 
 .tarjeta {
   display: flex;
   flex-direction: column;
+  gap: 16px;
   height: 100%;
-  background: var(--fondo);
-  border: 1px solid var(--linea);
-  border-radius: var(--radio);
-  overflow: hidden;
-  transition: box-shadow var(--transicion);
-}
-.tarjeta:hover { box-shadow: 0 10px 28px rgba(42, 37, 33, .1); }
-
-/* ── Enlace al detalle ───────────────────── */
-.tarjeta__enlace {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .45rem;
-  flex: 1;
-  padding-bottom: 1rem;
-  text-decoration: none;
-  color: inherit;
-  text-align: center;
+  min-width: 0;
 }
 
+/* ── Imagen ──────────────────────────────── */
 .tarjeta__imagen {
   position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4;
+  display: block;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radio);
   overflow: hidden;
-  background: var(--fondo-alt);
-  margin-bottom: .9rem;
+  background: var(--superficie);
 }
 .tarjeta__imagen img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 450ms cubic-bezier(.22, 1, .36, 1);
+  transition: transform 500ms cubic-bezier(.22, 1, .36, 1);
 }
-.tarjeta:hover .tarjeta__imagen img { transform: scale(1.045); }
+.tarjeta:hover .tarjeta__imagen img { transform: scale(1.04); }
+
+.tarjeta__badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 7px 16px;
+  background: var(--negro);
+  border-radius: var(--radio-pastilla);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
 
 .tarjeta__agotado {
   position: absolute;
-  top: .75rem;
-  left: .75rem;
-  padding: .3rem .75rem;
-  background: rgba(42, 37, 33, .88);
-  border-radius: 999px;
+  top: 16px;
+  right: 16px;
+  padding: 7px 16px;
+  background: var(--vino);
+  border-radius: var(--radio-pastilla);
   color: #fff;
-  font-size: .72rem;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
   text-transform: uppercase;
-  letter-spacing: .08em;
 }
 
-.tarjeta__nombre {
+/* ── Cuerpo ──────────────────────────────── */
+.tarjeta__cuerpo { display: flex; flex-direction: column; gap: 6px; }
+
+.tarjeta__nombre { margin: 0; font-size: 17px; font-weight: 700; line-height: 1.25; }
+.tarjeta__nombre a { color: var(--negro); text-decoration: none; }
+.tarjeta__nombre a:hover { color: var(--vino); }
+
+.tarjeta__desc {
   margin: 0;
-  padding-inline: 1rem;
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--tinta);
-}
-
-.tarjeta__categoria {
-  font-size: .85rem;
-  color: var(--naranja-fin);
-}
-
-/* ── Precio, con "desde" cuando varía por talla ── */
-.tarjeta__precio {
-  display: inline-flex;
-  align-items: baseline;
-  gap: .35rem;
-  margin: 0;
-  font-size: 1.05rem;
+  font-size: 13px;
+  line-height: 20px;
   color: var(--tinta-media);
-}
-
-.tarjeta__desde {
-  font-size: .72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--tinta-tenue);
-}
-
-/* ── Zona de acción ──────────────────────── */
-.tarjeta__accion {
-  display: flex;
-  flex-direction: column;
-  gap: .7rem;
-  padding: 0 1rem 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ── Tallas ──────────────────────────────── */
 .tallas {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: .35rem;
+  gap: 6px;
   margin: 0;
   padding: 0;
   border: 0;
 }
-.tallas legend {
-  width: 100%;
-  padding: 0 0 .4rem;
-  text-align: center;
-  font-size: .68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .09em;
-  color: var(--tinta-tenue);
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .chip {
-  min-width: 38px;
-  padding: .4rem .55rem;
-  background: var(--fondo);
+  min-width: 36px;
+  padding: .35rem .5rem;
+  background: transparent;
   border: 1px solid var(--linea);
-  border-radius: 6px;
-  color: var(--tinta);
+  border-radius: var(--radio);
+  color: var(--negro);
   font: inherit;
-  font-size: .85rem;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transicion);
 }
-.chip:hover:not(:disabled) { border-color: var(--tinta-tenue); }
-
-.chip--activo {
-  background: var(--tinta);
-  border-color: var(--tinta);
-  color: #fff;
-}
-
+.chip:hover:not(:disabled) { border-color: var(--tinta-media); }
+.chip--activo { background: var(--negro); border-color: var(--negro); color: #fff; }
 .chip--agotada {
   background: var(--fondo-alt);
   color: var(--tinta-tenue);
   cursor: not-allowed;
   text-decoration: line-through;
-  text-decoration-thickness: 1px;
 }
-.chip--agotada:hover { border-color: var(--linea); }
 
-/* ── Botón ───────────────────────────────── */
-.tarjeta__boton {
-  width: 100%;
-  padding: .8rem 1rem;
-  background: transparent;
-  border: 1px solid var(--linea);
-  border-radius: var(--radio);
-  color: var(--tinta);
-  font: inherit;
-  font-size: .95rem;
-  cursor: pointer;
-  transition: all var(--transicion);
+/* ── Pie ─────────────────────────────────── */
+.tarjeta__pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 2px;
 }
-.tarjeta__boton:hover:not(:disabled) {
-  background: linear-gradient(90deg, var(--naranja-ini), var(--naranja-fin));
-  border-color: transparent;
+
+.tarjeta__precio {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 1 auto;
+  gap: 0;
+  margin: 0;
+  min-width: 0;
+  font-family: var(--fuente-display);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--vino);
+}
+
+.tarjeta__desde {
+  font-family: var(--fuente-texto);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .9px;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--tinta-tenue);
+}
+
+.anadir {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 11px 20px;
+  background: var(--negro);
+  border: 0;
+  border-radius: var(--radio-pastilla);
   color: #fff;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color var(--transicion), color var(--transicion);
 }
-.tarjeta__boton:disabled {
+.anadir:hover:not(:disabled) { background: var(--vino); }
+.anadir:disabled {
+  background: var(--fondo-alt);
   color: var(--tinta-tenue);
   cursor: not-allowed;
 }
-.tarjeta__boton--ok {
-  background: #e8f5e9;
-  border-color: #c3e6c8;
-  color: #1f6b2a;
-  font-weight: 600;
-}
-.tarjeta__boton--ok:disabled { color: #1f6b2a; }
+.anadir--ok { background: var(--verde); }
+.anadir--ok:disabled { background: var(--verde); color: #fff; }
+
+.anadir__icono { font-size: 14px; line-height: 1; }
 
 /* ── Accesibilidad ───────────────────────── */
-.tarjeta__enlace:focus-visible,
+.tarjeta__imagen:focus-visible,
+.tarjeta__nombre a:focus-visible,
 .chip:focus-visible,
-.tarjeta__boton:focus-visible {
-  outline: 2px solid var(--naranja);
-  outline-offset: 2px;
+.anadir:focus-visible {
+  outline: 2px solid var(--vino);
+  outline-offset: 3px;
+}
+
+/* ── Dos columnas: la tarjeta queda estrecha ── */
+@media (max-width: 900px) {
+  .tarjeta { gap: 12px; }
+  .tarjeta__nombre { font-size: 15px; }
+  .tarjeta__desc { font-size: 12px; line-height: 18px; }
+  .tarjeta__precio { font-size: 20px; }
+
+  .tarjeta__pie { flex-wrap: wrap; row-gap: 12px; }
+  .anadir {
+    min-width: 0;
+    padding: 10px 16px;
+    font-size: 10px;
+    letter-spacing: .8px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
+  }
+}
+
+/* ── Una columna: vuelve a haber espacio ───── */
+@media (max-width: 560px) {
+  .tarjeta__nombre { font-size: 17px; }
+  .tarjeta__desc { font-size: 13px; line-height: 20px; }
+  .tarjeta__precio { font-size: 24px; }
+  .tarjeta__pie { flex-wrap: nowrap; }
+  .anadir {
+    padding: 11px 20px;
+    font-size: 11px;
+    letter-spacing: 1.1px;
+    white-space: nowrap;
+  }
 }

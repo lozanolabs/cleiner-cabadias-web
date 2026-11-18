@@ -1,15 +1,9 @@
 <header class="cabecera">
-<a class="cabecera__logo" routerLink="/">
-  <img src="assets/logo_nombre.png" alt="">
-</a>
-  <button class="hamburguesa" type="button"
-          (click)="alternar()"
-          [attr.aria-expanded]="abierto()"
-          [attr.aria-label]="(abierto() ? 'menu.cerrar' : 'menu.abrir') | t">
-    <span></span><span></span><span></span>
-  </button>
+  <a class="cabecera__logo" routerLink="/">
+    <img src="assets/logo-blanco.png" alt="Cleiner Cabadías">
+  </a>
 
-  <nav class="navegacion" [class.navegacion--abierta]="abierto()">
+  <nav class="navegacion">
     <a routerLink="/tienda" routerLinkActive="activo"
        [routerLinkActiveOptions]="{ exact: true }">{{ 'menu.tienda' | t }}</a>
 
@@ -26,6 +20,7 @@
               aria-haspopup="listbox"
               [attr.aria-label]="'idioma.seleccionar' | t">
         <img class="bandera" [src]="'banderas/' + idiomaActivo().bandera + '.svg'" alt="" aria-hidden="true">
+        <span class="idioma__codigo">{{ idiomaActivo().codigo }}</span>
         <span class="idioma__flecha" aria-hidden="true"></span>
       </button>
 
@@ -38,7 +33,7 @@
                       [class.seleccionado]="i.codigo === idioma.actual()"
                       (click)="cambiarIdioma(i.codigo)">
                 <img class="bandera" [src]="'banderas/' + i.bandera + '.svg'" alt="" aria-hidden="true">
-                <span class="idioma__nombre">{{ i.nombre }}</span>
+                <span>{{ i.nombre }}</span>
               </button>
             </li>
           }
@@ -62,4 +57,101 @@
 
     <a class="proposito" routerLink="/por-que-lo-hacemos">{{ 'menu.proposito' | t }}</a>
   </div>
+
+  <button class="hamburguesa" type="button"
+          (click)="alternar()"
+          [attr.aria-expanded]="abierto()"
+          [attr.aria-label]="'menu.abrir' | t">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- ═══ Menú móvil a pantalla completa ═══════════════════ -->
+@if (abierto()) {
+  <div class="panel" role="dialog" aria-modal="true">
+    <div class="panel__head">
+      <a class="panel__logo" routerLink="/" (click)="cerrar()">
+        <img src="assets/logo-blanco.png" alt="Cleiner Cabadías">
+      </a>
+      <button class="panel__cerrar" type="button"
+              (click)="cerrar()" [attr.aria-label]="'menu.cerrar' | t">×</button>
+    </div>
+
+    <div class="panel__contenido">
+      <nav class="enlaces">
+        <a class="enlace" routerLink="/tienda" (click)="cerrar()">
+          <span class="enlace__num">01</span>
+          <span class="enlace__label display">{{ 'menu.tienda' | t }}</span>
+          <span class="enlace__flecha" aria-hidden="true">→</span>
+        </a>
+
+        @for (cat of categorias(); track cat.id; let i = $index) {
+          <a class="enlace" [routerLink]="['/tienda', cat.slug]" (click)="cerrar()">
+            <span class="enlace__num">0{{ i + 2 }}</span>
+            <span class="enlace__label display">{{ cat.nombre }}</span>
+            <span class="enlace__flecha" aria-hidden="true">→</span>
+          </a>
+        }
+
+        <a class="enlace" routerLink="/por-que-lo-hacemos" (click)="cerrar()">
+          <span class="enlace__num">0{{ categorias().length + 2 }}</span>
+          <span class="enlace__label display">{{ 'menu.proposito' | t }}</span>
+          <span class="enlace__flecha" aria-hidden="true">→</span>
+        </a>
+      </nav>
+
+      <div class="utilidades">
+        <a class="utilidad" routerLink="/carrito" (click)="cerrar()">
+          <span>{{ 'carrito.titulo' | t }}</span>
+          @if (carrito.cantidad() > 0) {
+            <span class="utilidad__badge">{{ carrito.cantidad() }}</span>
+          }
+        </a>
+
+        <a class="utilidad" [href]="'https://wa.me/' + contacto.whatsapp"
+           target="_blank" rel="noopener noreferrer">
+          <span>{{ 'pie.contacto' | t }}</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="panel__pie">
+      <div class="panel__fila">
+        <div class="idiomas">
+          @for (i of idioma.disponibles; track i.codigo) {
+            <button type="button" class="idioma-pill"
+                    [class.idioma-pill--activo]="i.codigo === idioma.actual()"
+                    (click)="cambiarIdioma(i.codigo)">{{ i.codigo }}</button>
+          }
+        </div>
+
+        <div class="redes">
+          <a [href]="redes.instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none"
+                 stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a [href]="redes.facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none"
+                 stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <path d="M14.5 8.5h2.2V5.4h-2.4c-2.3 0-3.7 1.5-3.7 3.9v1.8H8.3v3.1h2.3V21h3.2v-6.8h2.3l.4-3.1h-2.7V9.6c0-.8.3-1.1 1.1-1.1Z"/>
+            </svg>
+          </a>
+          <a [href]="'tel:' + contacto.whatsapp" aria-label="Teléfono">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none"
+                 stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <path d="M5 3h3l2 5-2.2 1.3a12 12 0 0 0 5.9 5.9L15 13l5 2v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3 5.2 2 2 0 0 1 5 3Z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <p class="panel__direccion">
+        {{ contacto.direccion }} · {{ contacto.telefono }}
+      </p>
+    </div>
+  </div>
+}

@@ -1,56 +1,57 @@
 <article class="tarjeta">
-  <a class="tarjeta__enlace" [routerLink]="['/tienda/producto', producto().slug]">
-    <div class="tarjeta__imagen">
-      <img [src]="producto().imagenUrl || 'assets/placeholder.svg'"
-           [alt]="producto().nombre" loading="lazy" width="400" height="533">
-      @if (agotado()) {
-        <span class="tarjeta__agotado">{{ 'producto.agotado' | t }}</span>
-      }
-    </div>
-
-    <h3 class="tarjeta__nombre">{{ producto().nombre }}</h3>
-
+  <a class="tarjeta__imagen" [routerLink]="['/tienda/producto', producto().slug]">
+    <img [src]="producto().imagenUrl || 'assets/placeholder.svg'"
+         [alt]="producto().nombre" loading="lazy" width="400" height="480">
     @if (producto().categoriaNombre) {
-      <span class="tarjeta__categoria">{{ producto().categoriaNombre }}</span>
+      <span class="tarjeta__badge">{{ producto().categoriaNombre }}</span>
     }
+    @if (agotado()) {
+      <span class="tarjeta__agotado">{{ 'producto.agotado' | t }}</span>
+    }
+  </a>
 
+  <div class="tarjeta__cuerpo">
+    <h3 class="tarjeta__nombre">
+      <a [routerLink]="['/tienda/producto', producto().slug]">{{ producto().nombre }}</a>
+    </h3>
+    @if (producto().descripcion) {
+      <p class="tarjeta__desc">{{ producto().descripcion }}</p>
+    }
+  </div>
+
+  @if (!agotado() && mostrarTallas()) {
+    <fieldset class="tallas">
+      <legend class="visualmente-oculto">{{ 'producto.talla' | t }}</legend>
+      @for (t of tallas(); track t.talla) {
+        <button type="button" class="chip"
+                [class.chip--activo]="tallaElegida()?.talla === t.talla"
+                [class.chip--agotada]="t.stock <= 0"
+                [disabled]="t.stock <= 0"
+                [attr.aria-pressed]="tallaElegida()?.talla === t.talla"
+                (click)="elegirTalla(t)">{{ t.talla }}</button>
+      }
+    </fieldset>
+  }
+
+  <div class="tarjeta__pie">
     <p class="tarjeta__precio">
       @if (mostrarDesde()) {
         <span class="tarjeta__desde">{{ 'producto.desde' | t }}</span>
       }
       <app-precio [cop]="precioMostrado()" />
     </p>
-  </a>
 
-  <div class="tarjeta__accion">
-    @if (agotado()) {
-      <button type="button" class="tarjeta__boton" disabled>
-        {{ 'producto.agotado' | t }}
-      </button>
-    } @else {
-      @if (mostrarTallas()) {
-        <fieldset class="tallas">
-          <legend>{{ 'producto.talla' | t }}</legend>
-          @for (t of tallas(); track t.talla) {
-            <button type="button" class="chip"
-                    [class.chip--activo]="tallaElegida()?.talla === t.talla"
-                    [class.chip--agotada]="t.stock <= 0"
-                    [disabled]="t.stock <= 0"
-                    [attr.aria-pressed]="tallaElegida()?.talla === t.talla"
-                    [title]="t.stock <= 0 ? ('producto.agotado' | t) : t.talla"
-                    (click)="elegirTalla(t)">{{ t.talla }}</button>
-          }
-        </fieldset>
+    <button type="button" class="anadir"
+            [class.anadir--ok]="agregado()"
+            [disabled]="!puedeAgregar()"
+            (click)="agregar()">
+      {{ (agotado() ? 'producto.agotado'
+                    : agregado() ? 'producto.agregado'
+                    : puedeAgregar() ? 'producto.anadir'
+                    : 'producto.elijaTalla') | t }}
+      @if (puedeAgregar() && !agregado()) {
+        <span class="anadir__icono" aria-hidden="true">+</span>
       }
-
-      <button type="button" class="tarjeta__boton"
-              [class.tarjeta__boton--ok]="agregado()"
-              [disabled]="!puedeAgregar()"
-              (click)="agregar()">
-        {{ (agregado() ? 'producto.agregado'
-                       : puedeAgregar() ? 'producto.agregar'
-                       : 'producto.elijaTalla') | t }}
-      </button>
-    }
+    </button>
   </div>
 </article>
